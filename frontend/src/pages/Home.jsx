@@ -8,25 +8,25 @@ const Home = () => {
   const currentUser = useSelector((state) => state.user);
   const [latestTopPost, setLatestTopPost] = useState(null);
   const [allPosts, setAllPosts] = useState(null);
-  const [spinner1, setSpinner1] = useState(false);
+  // const [spinner1, setSpinner1] = useState(false);
   const [spinner2, setSpinner2] = useState(false);
   const fetchLatestStoryTopPost = async () => {
     try {
-      setSpinner1(true);
+      // setSpinner1(true);
       const res = await fetch(
         "http://localhost:3000/api/posts/getposts?limit=1"
       );
       const data = await res.json();
       if (res.ok) {
-        setSpinner1(false);
+        // setSpinner1(false);
         setLatestTopPost(data.posts[0]);
       }
       if (!res.ok) {
-        setSpinner1(false);
+        // setSpinner1(false);
         console.log("error while fetch lateststorytop post");
       }
     } catch (err) {
-      setSpinner1(false);
+      // setSpinner1(false);
       console.log(err);
     }
   };
@@ -94,9 +94,7 @@ const Home = () => {
           </div>
         </div>
       ) : (
-        <div className=" flex items-center justify-center w-full mt-5">
-          <Spinner className="flex justify-center w-30 h-20" />
-        </div>
+        ""
       )}
       <div className="cards flex flex-col justify-between  md:flex-row  text-sm md:text-md  md:m-2  md:flex-wrap ">
         {allPosts ? (
