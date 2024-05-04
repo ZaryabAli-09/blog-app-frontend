@@ -19,7 +19,10 @@ dotenv.config();
 // express json is body parser ,READ THE POST REQ.BODY - OTHERWISE, RETURNS EMPTY SET OF DATA .
 app.use(express.json());
 const port = process.env.PORT || 8000;
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://blog-mern-app-ro48.vercel.app",
+];
 // for cross origin connection
 app.use(
   cors({
