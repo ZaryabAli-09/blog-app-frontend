@@ -6,8 +6,12 @@ import authRoutes from "./routes/auth.route.js";
 import postRoutes from "./routes/posts.route.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 const app = express();
+
+// it will give us directory of our project at any device
+const __dirname = path.resolve();
 
 // it reads the contents of a .env file in your project directory and adds the variables defined in that file to the process.env object.
 dotenv.config();
@@ -19,7 +23,7 @@ const allowedOrigins = ["http://localhost:5173"];
 // for cross origin connection
 app.use(
   cors({
-    // origin: allowedOrigins,
+    origin: allowedOrigins,
     //This option allows requests from the specified origins to include cookies and HTTP authentication headers in the request.
     credentials: true,
   })
@@ -29,6 +33,11 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/posts", postRoutes);
+
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
 
 // middleware for handling error
 app.use((err, req, res, next) => {
