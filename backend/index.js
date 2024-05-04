@@ -14,12 +14,13 @@ dotenv.config();
 
 // express json is body parser ,READ THE POST REQ.BODY - OTHERWISE, RETURNS EMPTY SET OF DATA .
 app.use(express.json());
-
+const port = process.env.PORT || 8000;
 const allowedOrigins = ["http://localhost:5173"];
 // for cross origin connection
 app.use(
   cors({
-    origin: allowedOrigins,
+    // origin: allowedOrigins,
+    //This option allows requests from the specified origins to include cookies and HTTP authentication headers in the request.
     credentials: true,
   })
 );
@@ -52,7 +53,7 @@ async function dbConnection() {
 }
 
 // listening on server
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
   dbConnection();
-  console.log(`server running on ${process.env.PORT} port`);
+  console.log(`server running on ${port} port`);
 });

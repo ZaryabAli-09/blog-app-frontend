@@ -75,7 +75,7 @@ const Header = () => {
                 onClick={onProfilePic}
                 className="w-8 rounded-2xl relative left-0 top-0 cursor-pointer"
                 src={currentUser.profilePicture}
-                alt="profile picture"
+                alt=""
               />
               <div
                 className={` ${dropDown} z-10 absolute top-16 right-4 bg-opacity-80 bg-gray-300 p-4 text-black rounded-xl flex flex-col space-y-4  `}
