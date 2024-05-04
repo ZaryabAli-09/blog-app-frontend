@@ -45,7 +45,7 @@ const DashProfile = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:3000/api/user/update/${currentUser._id}`,
+        `${window.location.origin}/api/user/update/${currentUser._id}`,
         {
           method: "PUT",
           headers: {

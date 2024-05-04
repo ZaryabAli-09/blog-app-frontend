@@ -16,7 +16,7 @@ const DashPosts = () => {
     try {
       setSpinner(true);
       const response = await fetch(
-        `http://localhost:3000/api/posts/getposts?userId=${currentUser._id}`
+        `${window.location.origin}/api/posts/getposts?userId=${currentUser._id}`
       );
       const data = await response.json();
       if (response.ok) {
@@ -45,7 +45,7 @@ const DashPosts = () => {
     const startIndex = fetchedPosts.length;
     try {
       const res = await fetch(
-        `http://localhost:3000/api/posts/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `${window.location.origin}/api/posts/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -62,7 +62,7 @@ const DashPosts = () => {
   const deletePostHandler = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/posts/deletepost/${postId}/${currentUser._id}`,
+        `${window.location.origin}/api/posts/deletepost/${postId}/${currentUser._id}`,
         {
           method: "DELETE",
           credentials: "include",

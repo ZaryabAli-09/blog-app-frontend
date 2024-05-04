@@ -18,7 +18,7 @@ const DashOverview = () => {
   const fetchUsers = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/user/getusers?limit=5",
+        `${window.location.origin}/api/user/getusers?limit=5`,
         {
           credentials: "include",
         }
@@ -37,7 +37,7 @@ const DashOverview = () => {
   const fetchPosts = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/posts/getposts?limit=5"
+        `${window.location.origin}/api/posts/getposts?limit=5`
       );
       const data = await res.json();
       if (res.ok) {

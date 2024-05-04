@@ -14,7 +14,7 @@ const Home = () => {
     try {
       // setSpinner1(true);
       const res = await fetch(
-        "http://localhost:3000/api/posts/getposts?limit=1"
+        `${window.location.origin}/api/posts/getposts?limit=1`
       );
       const data = await res.json();
       if (res.ok) {
@@ -34,7 +34,7 @@ const Home = () => {
     try {
       setSpinner2(true);
       const res = await fetch(
-        "http://localhost:3000/api/posts/getposts?limit=10"
+        `${window.location.origin}/api/posts/getposts?limit=10`
       );
       const data = await res.json();
       if (res.ok) {

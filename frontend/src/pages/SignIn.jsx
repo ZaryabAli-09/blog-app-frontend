@@ -25,14 +25,17 @@ const SignIn = () => {
     };
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${window.location.origin}/api/auth/signin`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          credentials: "include",
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         setLoading(false);

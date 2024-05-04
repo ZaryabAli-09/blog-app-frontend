@@ -11,7 +11,7 @@ const PostPage = () => {
     const fetchPost = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/posts/getposts?slug=${postSlug}`
+          `${window.location.origin}/api/posts/getposts?slug=${postSlug}`
         );
         const data = await res.json();
         if (res.ok) {
@@ -28,7 +28,7 @@ const PostPage = () => {
     const fetchRecentPost = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/posts/getposts?limit=3"
+          `${window.location.origin}/api/posts/getposts?limit=3`
         );
         const data = await res.json();
         if (res.ok) {
