@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { signInSuccessAction } from "../reduxStore/store";
-
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import app from "../firebase.js";
 
 const DashProfile = () => {
   const dispatch = useDispatch();
@@ -16,28 +8,16 @@ const DashProfile = () => {
   const [username, setUsername] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [profilePicture, setProfilePicture] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  // firebase states
-  const [imageFile, setImageFile] = useState(null);
-  const [imageFileUrl, setImageFileUrl] = useState(null);
-  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(0);
-  const [imageFileUploadError, setImageFileUploadError] = useState(null);
-  const [onProfileImg, setOnProfileImg] = useState(false);
 
   async function onUpdatedUserFormSubmit(e) {
     e.preventDefault();
-    if (!imageFileUrl) {
-      setImageFileUrl(currentUser.profilePicture);
-    }
-    setOnProfileImg(false);
 
     const formData = {
       username,
       email,
       password,
-      profilePicture: imageFileUrl,
     };
     if (Object.keys(formData).length === 0) {
       return;
@@ -45,7 +25,7 @@ const DashProfile = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${window.location.origin}/api/user/update/${currentUser._id}`,
+        `http://localhost:3000/api/user/update/${currentUser._id}`,
         {
           method: "PUT",
           headers: {
@@ -74,44 +54,6 @@ const DashProfile = () => {
       setLoading(false);
     }
   }
-  function handleImageChange(e) {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setImageFileUrl(URL.createObjectURL(file));
-    }
-  }
-  useEffect(() => {
-    if (imageFile) {
-      uploadImage();
-    }
-  }, [imageFile]);
-
-  async function uploadImage() {
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + imageFile.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, imageFile);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImageFileUploadProgress(progress.toFixed(0));
-      },
-      (error) => {
-        setImageFileUploadError("could not upload image (file must be 5MB)");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageFileUrl(downloadURL);
-        });
-      }
-    );
-  }
-  function profileImgClickHandler() {
-    setOnProfileImg(!onProfileImg);
-  }
 
   return (
     <div className="w-full flex flex-col  items-center mt-20 ">
@@ -121,23 +63,10 @@ const DashProfile = () => {
           onSubmit={onUpdatedUserFormSubmit}
           className=" flex items-center flex-col space-y-2 w-80"
         >
-          <div className={onProfileImg ? "visible" : "hidden"}>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          </div>
-          <div
-            className="w-20 rounded-full overflow-hidden border h-20 flex items-center justify-center cursor-pointer"
-            onClick={profileImgClickHandler}
-          >
-            <img
-              src={imageFileUrl || currentUser.profilePicture}
-              onChange={(e) => setProfilePicture(e.target.value)}
-              alt=""
-              className={
-                imageFile && imageFileUploadProgress < 100
-                  ? `opacity-20`
-                  : "opacity-100"
-              }
-            />
+          <div className="w-20 rounded-full text-white bg-gray-300 overflow-hidden border h-20 flex items-center justify-center ">
+            <div className="text-4xl mb-3">
+              {currentUser.username.split("")[0]}
+            </div>
           </div>
           <input
             className="rounded w-full"

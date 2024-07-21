@@ -15,11 +15,10 @@ const DashPosts = () => {
   const fetchPost = async () => {
     try {
       setSpinner(true);
-      const response = await fetch(
-        `${window.location.origin}/api/posts/getposts?userId=${currentUser._id}`
-      );
-      const data = await response.json();
-      if (response.ok) {
+      const res = await fetch(`http://localhost:3000/api/posts/getposts`);
+      const data = await res.json();
+      if (res.ok) {
+        console.log(data);
         setSpinner(false);
         setFetchedPosts(data.posts);
         if (data.posts.length < 9) {
@@ -28,6 +27,7 @@ const DashPosts = () => {
       }
       if (!res.ok) {
         setSpinner(false);
+        console.log(data);
         return;
       }
     } catch (error) {
@@ -45,7 +45,7 @@ const DashPosts = () => {
     const startIndex = fetchedPosts.length;
     try {
       const res = await fetch(
-        `${window.location.origin}/api/posts/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `http://localhost:3000/api/posts/getposts?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -62,7 +62,7 @@ const DashPosts = () => {
   const deletePostHandler = async () => {
     try {
       const res = await fetch(
-        `${window.location.origin}/api/posts/deletepost/${postId}/${currentUser._id}`,
+        `http://localhost:3000/api/posts/deletepost/${postId}/${currentUser._id}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -143,6 +143,8 @@ const DashPosts = () => {
                   </tr>
                 );
               })
+            ) : fetchedPosts && fetchedPosts.length <= 0 ? (
+              <div className="text-center p-3">No posts</div>
             ) : (
               <div className=" flex justify-center   my-5 ">
                 <Spinner className="w-10 h-10" />

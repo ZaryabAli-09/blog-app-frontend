@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import app from "../firebase";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -15,68 +8,33 @@ const CreatePost = () => {
   const [category, setCategory] = useState("");
   const [file, setFile] = useState("");
   const [content, setContent] = useState("");
-  const [uploadBtnClick, setUploadBtnClick] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  // firebase image uplaod
-  const [fileUrl, setFileUrl] = useState(null);
-  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(0);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
-  async function uploadImageHandler(e) {
+
+  async function publishPostHandler(e) {
     e.preventDefault();
     if (!file) {
       return setImageFileUploadError("Please provide image file");
     }
-
-    setImageFileUploadError(null);
-    setUploadBtnClick(true);
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImageFileUploadProgress(progress.toFixed(0));
-      },
-      (error) => {
-        setImageFileUploadError("could not upload image (file must be 5MB)");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setFileUrl(downloadURL);
-          setUploadBtnClick(false);
-        });
-      }
-    );
-  }
-
-  async function publishPostHandler(e) {
-    e.preventDefault();
-    if (!title || !category || !fileUrl || !content) {
+    if (!title || !category || !content) {
       return setErrorMessage("please fill all the required fields");
     }
-    const formData = {
-      title,
-      category,
-      image: fileUrl,
-      content,
-    };
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("category", category);
+
     try {
       setLoading(true);
-      const response = await fetch(
-        `${window.location.origin}/api/posts/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`http://localhost:3000/api/posts/create`, {
+        method: "POST",
+
+        body: formData,
+        credentials: "include",
+      });
       const data = await response.json();
       if (response.ok) {
         setLoading(false);
@@ -134,14 +92,14 @@ const CreatePost = () => {
             }}
             className="rounded bg-sky-300 p-2"
           />
-          <button
+          {/* <button
             onClick={uploadImageHandler}
             className="p-2 rounded border-black border font-bold text-sm  hover:bg-sky-700 hover:text-white"
           >
             {uploadBtnClick && imageFileUploadProgress < 100
               ? "uploading..."
               : "Upload Image"}
-          </button>
+          </button> */}
         </div>
         {imageFileUploadError ? (
           <div className="text-white bg-red-400 p-2 w-full rounded text-center bg-opacity-70 ">
@@ -150,8 +108,8 @@ const CreatePost = () => {
         ) : (
           ""
         )}
-
-        {fileUrl ? <img src={fileUrl} alt="" /> : ""}
+        {/* 
+        {fileUrl ? <img src={fileUrl} alt="" /> : ""} */}
         <ReactQuill
           required
           onChange={(value) => setContent(value)}

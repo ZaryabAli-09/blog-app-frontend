@@ -1,8 +1,11 @@
+import { uploadToCloudinary } from "../config/cloudinary.config.js";
 import Post from "../models/post.model.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const create = async (req, res, next) => {
   if (!req.isAdmin) {
-    return res.status(401).json({ message: "Unautorized" });
+    console.log(req.isAdmin);
+    return res.status(401).json({ message: "Unauthorized" });
   }
   if (!req.body.title || !req.body.content) {
     return res
@@ -14,12 +17,28 @@ const create = async (req, res, next) => {
     .join("-")
     .toLowerCase()
     .replace(/[^a-zA-z0-9-]/g, "-");
+
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  // Upload file to Cloudinary
+  const localFilePath = req.file.path;
+
   try {
+    const uploadedFile = await uploadToCloudinary(localFilePath);
+
+    if (!uploadedFile) {
+      return res
+        .status(400)
+        .json({ message: "Error occur while uploading image" });
+    }
     const newPost = new Post({
       userId: req.id,
       content: req.body.content,
       title: req.body.title,
-      image: req.body.image,
+      image: uploadedFile?.secure_url,
+      imagePublicUrl: uploadedFile.public_id,
       category: req.body.category,
       slug: slug,
     });
@@ -51,6 +70,21 @@ const getPosts = async (req, res, next) => {
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
+
+    res.status(200).json({
+      posts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPostsLength = async (req, res, next) => {
+  if (!req.isAdmin) {
+    console.log(req.isAdmin);
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  try {
     const totalPosts = await Post.countDocuments();
     const now = new Date();
     const oneMonthAgo = new Date(
@@ -62,7 +96,6 @@ const getPosts = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
     res.status(200).json({
-      posts,
       totalPosts,
       lastMonthPosts,
     });
@@ -74,11 +107,23 @@ const getPosts = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
   try {
     if (!req.isAdmin || req.id !== req.params.userId) {
-      return res.status(401).json("you are not allowed to delete this post");
+      return res
+        .status(401)
+        .json({ message: "you are not allowed to delete this post" });
     }
 
-    await Post.findByIdAndDelete(req.params.postId);
-    res.status(200).json("The post has been deleted");
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const deletePostImage = await cloudinary.uploader.destroy(
+      post.imagePublicUrl
+    );
+
+    console.log(deletePostImage);
+    await Post.deleteOne({ _id: post._id });
+    res.status(200).json({ message: "The post has been deleted" });
   } catch (error) {
     next(error);
   }
@@ -87,7 +132,7 @@ const deletePost = async (req, res, next) => {
 const editPost = async (req, res, next) => {
   try {
     if (!req.isAdmin || req.id !== req.params.userId) {
-      return res.status(401).json("Unauthorized");
+      return res.status(401).json({ message: "Unauthorized" });
     }
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
@@ -95,7 +140,6 @@ const editPost = async (req, res, next) => {
         $set: {
           title: req.body.title,
           category: req.body.category,
-          image: req.body.image,
           content: req.body.content,
         },
       },
@@ -106,4 +150,4 @@ const editPost = async (req, res, next) => {
     next(error);
   }
 };
-export { create, getPosts, deletePost, editPost };
+export { getPostsLength, create, getPosts, deletePost, editPost };

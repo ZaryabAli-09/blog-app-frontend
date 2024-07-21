@@ -20,7 +20,7 @@ const OAuth = () => {
         email: resultFromGoogle.user.email,
         googlePhotoUrl: resultFromGoogle.user.photoURL,
       };
-      const res = await fetch(`${window.location.origin}/api/auth/googleAuth`, {
+      const res = await fetch(`http://localhost:3000/api/auth/googleAuth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

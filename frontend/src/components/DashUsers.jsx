@@ -14,7 +14,7 @@ const DashUsers = () => {
     const getUser = async () => {
       try {
         setSpinner(true);
-        const res = await fetch("${window.location.origin}/api/user/getusers", {
+        const res = await fetch("http://localhost:3000/api/user/getusers", {
           credentials: "include",
         });
         const data = await res.json();
@@ -39,7 +39,7 @@ const DashUsers = () => {
   async function deleteUserHandler() {
     try {
       const res = await fetch(
-        `${window.location.origin}/api/user/delete/${deleteBtnClick}`,
+        `http://localhost:3000/api/user/delete/${deleteBtnClick}`,
         {
           method: "DELETE",
         }
@@ -66,7 +66,7 @@ const DashUsers = () => {
     const startIndex = fetchedUsers.length;
     try {
       const res = await fetch(
-        `${window.location.origin}/api/user/getusers?startIndex=${startIndex}`,
+        `http://localhost:3000/api/user/getusers?startIndex=${startIndex}`,
         {
           credentials: "include",
         }
@@ -131,6 +131,8 @@ const DashUsers = () => {
                   </tr>
                 );
               })
+            ) : fetchedUsers && fetchedUsers.length <= 0 ? (
+              <div className="text-center p-3">No Users</div>
             ) : (
               <div className=" flex justify-center   my-5 ">
                 <Spinner className="w-10 h-10" />

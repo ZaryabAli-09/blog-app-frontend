@@ -1,28 +1,33 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import userRoutes from "./backend/routes/user.route.js";
-import authRoutes from "./backend/routes/auth.route.js";
-import postRoutes from "./backend/routes/posts.route.js";
+import userRoutes from "./routes/user.route.js";
+import authRoutes from "./routes/auth.route.js";
+import postRoutes from "./routes/posts.route.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
 import path from "path";
 
 const app = express();
 
-// it will give us directory of our project at any device
-const __dirname = path.resolve();
-
 // it reads the contents of a .env file in your project directory and adds the variables defined in that file to the process.env object.
 dotenv.config();
 
+const port = process.env.PORT || 8000;
+const allowedOrigins = ["http://localhost:5173"];
+
+// Get the directory name using import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // express json is body parser ,READ THE POST REQ.BODY - OTHERWISE, RETURNS EMPTY SET OF DATA .
 app.use(express.json());
-const port = process.env.PORT || 8000;
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://blog-mern-app-ro48.vercel.app",
-];
+// app.use(express.static(path.resolve(__dirname, "dist")));
+app.use(cookieParser());
 // for cross origin connection
 app.use(
   cors({
@@ -31,16 +36,10 @@ app.use(
     credentials: true,
   })
 );
-app.use(cookieParser());
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/posts", postRoutes);
-
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
 
 // middleware for handling error
 app.use((err, req, res, next) => {

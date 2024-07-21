@@ -1,14 +1,10 @@
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 
-const test = (req, res) => {
-  res.json({ message: "api is working" });
-};
-
 const updateUser = async (req, res, next) => {
   try {
     if (req.id !== req.params.userId) {
-      return res.status(401).json("Unauthorized");
+      return res.status(401).json({ message: "Unauthorized" });
     }
     if (!req.body.password || req.body.password === "") {
       return res.status(400).json({ message: "Please enter password" });
@@ -47,16 +43,18 @@ const deleteUser = async (req, res, next) => {
 const signOut = async (req, res, next) => {
   try {
     res
-      .clearCookie("access_token")
+      .clearCookie("token")
       .status(200)
-      .json("User has been signed out");
+      .json({ message: "User has been signed out" });
   } catch (error) {
     next(error);
   }
 };
 const getUsers = async (req, res, next) => {
   if (!req.isAdmin) {
-    return res.status(403).json("You are not allowed to see all users");
+    return res
+      .status(403)
+      .json({ message: "You are not allowed to see all users" });
   }
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
@@ -69,6 +67,21 @@ const getUsers = async (req, res, next) => {
       .limit(limit);
 
     users.password = undefined;
+
+    res.status(200).json({
+      users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const getUsersLength = async (req, res, next) => {
+  if (!req.isAdmin) {
+    return res
+      .status(403)
+      .json({ message: "You are not allowed to see all users" });
+  }
+  try {
     const totalUsers = await User.countDocuments();
 
     const now = new Date();
@@ -82,7 +95,6 @@ const getUsers = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
     res.status(200).json({
-      users,
       totalUsers,
       lastMonthUsers,
     });
@@ -90,4 +102,5 @@ const getUsers = async (req, res, next) => {
     next(error);
   }
 };
-export { test, updateUser, deleteUser, signOut, getUsers };
+
+export { getUsersLength, updateUser, deleteUser, signOut, getUsers };

@@ -12,7 +12,7 @@ const Header = () => {
     return state.user;
   });
   const [dropDown, setDropDown] = useState("hidden");
-  function onProfilePic() {
+  function onProfile() {
     setMenu(false);
     if (dropDown === "hidden") {
       setDropDown("visible");
@@ -22,13 +22,10 @@ const Header = () => {
   }
   async function onSignOutHandler() {
     try {
-      const response = await fetch(
-        `${window.location.origin}/api/user/signout`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`http://localhost:3000/api/user/signout`, {
+        method: "POST",
+        credentials: "include",
+      });
       const data = await response.json();
       if (response.ok) {
         return dispatch(signInSuccessAction.signOut());
@@ -49,7 +46,7 @@ const Header = () => {
   return (
     <>
       <div className="flex items-center justify-between bg-sky-950 text-white h-14">
-        <div className="ml-3 flex  items-center space-x-1">
+        <div className="ml-3 flex  items-center space-x-1 ">
           <img
             style={{ width: "30px", borderRadius: "20px" }}
             src={logo}
@@ -69,17 +66,16 @@ const Header = () => {
         <div className="flex items-center space-x-3 px-4">
           {!currentUser ? (
             <button className="bg-slate-800 p-2 rounded-lg font-semibold hover:bg-slate-900 text-xs">
-              {" "}
               <Link to={"/signin"}>Sign In</Link>{" "}
             </button>
           ) : (
             <div className="">
-              <img
-                onClick={onProfilePic}
-                className="w-8 rounded-2xl relative left-0 top-0 cursor-pointer"
-                src={currentUser.profilePicture}
-                alt=""
-              />
+              <div
+                onClick={onProfile}
+                className="w-9 cursor-pointer h-9 bg-slate-200 rounded-full flex items-center justify-center text-gray-500 text-3xl font-bold"
+              >
+                <div className="mb-2">{currentUser.username.split("")[0]}</div>
+              </div>
               <div
                 className={` ${dropDown} z-10 absolute top-16 right-4 bg-opacity-80 bg-gray-300 p-4 text-black rounded-xl flex flex-col space-y-4  `}
               >

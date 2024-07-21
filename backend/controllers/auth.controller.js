@@ -3,20 +3,17 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 // the function is asynchronous because we save data to database(mongodb atlas)
 const signUp = async (req, res, next) => {
+  const { username, email, password } = req.body;
+  if (!username || !email || username === "" || email === "") {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+  if (!password || password.length < 8) {
+    return res.status(400).json({ message: "Password must be 8 characters" });
+  }
   try {
-    const { username, email, password } = req.body;
-    if (
-      !username ||
-      !email ||
-      !password ||
-      username === "" ||
-      email === "" ||
-      password === ""
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
     //   password encrytion using bcryptjs
     const hashedPassword = bcryptjs.hashSync(password, 10);
+
     const newUser = new User({
       username: username,
       email: email,
@@ -25,6 +22,7 @@ const signUp = async (req, res, next) => {
 
     // save is builtin function to save data to database and is asynchronous
     await newUser.save();
+
     res.status(200).json({ message: "Signup successfull" });
   } catch (error) {
     next(error);
@@ -32,12 +30,12 @@ const signUp = async (req, res, next) => {
 };
 
 const signIn = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password || email === "" || password === "") {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+  const { email, password } = req.body;
+  if (!email || !password || email === "" || password === "") {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
+  try {
     const validUser = await User.findOne({ email });
     if (!validUser) {
       // 404 status code is for user not found in db
@@ -54,11 +52,14 @@ const signIn = async (req, res, next) => {
         id: validUser._id,
         isAdmin: validUser.isAdmin,
       },
-      process.env.SECRET_KEY
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "10d",
+      }
     );
     // removing the password
     validUser.password = undefined;
-    res.cookie("access_token", token, { httpOnly: true });
+    res.cookie("token", token, { httpOnly: true });
     res.status(200).json(validUser);
   } catch (error) {
     next(error);
@@ -73,12 +74,13 @@ const googleAuth = async (req, res, next) => {
     if (user) {
       const token = jwt.sign(
         { id: user._id, isAdmin: user.isAdmin },
-        process.env.SECRET_KEY
+        process.env.SECRET_KEY,
+        { expiresIn: "10d" }
       );
       user.password = undefined;
       res
         .status(200)
-        .cookie("access_token", token, {
+        .cookie("token", token, {
           httpOnly: true,
         })
         .json(user);
@@ -96,12 +98,13 @@ const googleAuth = async (req, res, next) => {
       await newUser.save();
       const token = jwt.sign(
         { id: newUser._id, isAdmin: newUser.isAdmin },
-        process.env.SECRET_KEY
+        process.env.SECRET_KEY,
+        { expiresIn: "10d" }
       );
       newUser.password = undefined;
       res
         .status(200)
-        .cookie("access_token", token, {
+        .cookie("token", token, {
           httpOnly: true,
         })
         .json(newUser);

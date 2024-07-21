@@ -22,56 +22,24 @@ const EditPost = () => {
   const [uploadBtnClick, setUploadBtnClick] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  // firebase image uplaod
-  const [fileUrl, setFileUrl] = useState(null);
-  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(0);
-  const [imageFileUploadError, setImageFileUploadError] = useState(null);
-  async function uploadImageHandler(e) {
-    e.preventDefault();
-    if (!file) {
-      return setImageFileUploadError("Please provide image file");
-    }
 
-    setImageFileUploadError(null);
-    setUploadBtnClick(true);
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImageFileUploadProgress(progress.toFixed(0));
-      },
-      (error) => {
-        setImageFileUploadError("could not upload image (file must be 5MB)");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setFileUrl(downloadURL);
-          setUploadBtnClick(false);
-        });
-      }
-    );
-  }
+  //  const [imageFileUploadError, setImageFileUploadError] = useState(null);
 
   async function publishPostHandler(e) {
     e.preventDefault();
-    if (!title || !category || !fileUrl || !content) {
+    if (!title || !category || !content) {
       return setErrorMessage("please fill all the required fields");
     }
     const formData = {
       title,
       category,
-      image: fileUrl,
+      // image: file,
       content,
     };
     try {
       setLoading(true);
       const response = await fetch(
-        `${window.location.origin}/api/posts/editpost/${postId}/${currentUser._id}`,
+        `http://localhost:3000/api/posts/editpost/${postId}/${currentUser._id}`,
         {
           method: "PUT",
           headers: {
@@ -103,13 +71,13 @@ const EditPost = () => {
     async function getSpecifcPost() {
       try {
         const res = await fetch(
-          `${window.location.origin}/api/posts/getposts?postId=${postId}`
+          `http://localhost:3000/api/posts/getposts?postId=${postId}`
         );
         const data = await res.json();
         if (res.ok) {
           setCategory(data.posts[0].category);
           setContent(data.posts[0].content);
-          setFileUrl(data.posts[0].image);
+          setFile(data.posts[0].image);
           setTitle(data.posts[0].title);
         }
       } catch (error) {
@@ -145,7 +113,7 @@ const EditPost = () => {
             <option value="mongodb">Mongo DB</option>
           </select>
         </div>
-        <div className="flex gap-4 items-center justify-between border border-sky-900 p-3 rounded">
+        {/* <div className="flex gap-4 items-center justify-between border border-sky-900 p-3 rounded">
           <input
             required
             accept="image/*"
@@ -166,16 +134,16 @@ const EditPost = () => {
               ? "uploading..."
               : "Upload Image"}
           </button>
-        </div>
-        {imageFileUploadError ? (
+        </div> */}
+        {/* {imageFileUploadError ? (
           <div className="text-white bg-red-400 p-2 w-full rounded text-center bg-opacity-70 ">
             {imageFileUploadError}
           </div>
         ) : (
           ""
-        )}
+        )} */}
 
-        {fileUrl ? <img src={fileUrl} alt="" /> : ""}
+        {file ? <img src={file} alt="" /> : ""}
         <ReactQuill
           value={content}
           required

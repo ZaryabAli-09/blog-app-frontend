@@ -5,28 +5,31 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
+      trim: true, // Added trimming for extra spaces
+      minlength: 3, // Minimum length validation
+      maxlength: 50, // Maximum length validation
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      trim: true, // Added trimming for extra spaces
+      match: [
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ], // Regex for email validation
     },
     password: {
       type: String,
       required: true,
-    },
-    profilePicture: {
-      type: String,
-      default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+      minlength: 8, // Minimum length validation
     },
     isAdmin: {
       type: Boolean,
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true, strict: true }
 );
 
 const User = mongoose.model("User", userSchema);

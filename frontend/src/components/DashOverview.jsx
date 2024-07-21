@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import {
-  HiAnnotation,
   HiArrowNarrowUp,
   HiDocumentText,
   HiOutlineUserGroup,
@@ -9,25 +8,26 @@ import { useSelector } from "react-redux";
 
 const DashOverview = () => {
   const currentUser = useSelector((state) => state.user);
-  const [posts, setPosts] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [lastMonthUsers, setLastMonthUsers] = useState(0);
   const [lastMonthPosts, setLastMonthPosts] = useState(0);
   const [totalPosts, setTotalPosts] = useState(0);
-  const [lastMonthUsers, setLastMonthUsers] = useState(0);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [users, setUsers] = useState([]);
+
   const fetchUsers = async () => {
     try {
       const res = await fetch(
-        `${window.location.origin}/api/user/getusers?limit=5`,
+        `http://localhost:3000/api/user/getusers-length`,
         {
           credentials: "include",
         }
       );
       const data = await res.json();
       if (res.ok) {
-        setUsers(data.users);
         setTotalUsers(data.totalUsers);
         setLastMonthUsers(data.lastMonthUsers);
+      }
+      if (!res.ok) {
+        console.log(data);
       }
     } catch (error) {
       console.log(error.message);
@@ -37,11 +37,14 @@ const DashOverview = () => {
   const fetchPosts = async () => {
     try {
       const res = await fetch(
-        `${window.location.origin}/api/posts/getposts?limit=5`
+        `http://localhost:3000/api/posts/getposts-length`,
+
+        {
+          credentials: "include",
+        }
       );
       const data = await res.json();
       if (res.ok) {
-        setPosts(data.posts);
         setTotalPosts(data.totalPosts);
         setLastMonthPosts(data.lastMonthPosts);
       }
@@ -94,4 +97,4 @@ const DashOverview = () => {
   );
 };
 
-export default DashOverview;
+export default memo(DashOverview);
