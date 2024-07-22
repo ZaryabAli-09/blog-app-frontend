@@ -63,9 +63,9 @@ const DashProfile = () => {
           onSubmit={onUpdatedUserFormSubmit}
           className=" flex items-center flex-col space-y-2 w-80"
         >
-          <div className="w-20 rounded-full text-white bg-gray-300 overflow-hidden border h-20 flex items-center justify-center ">
-            <div className="text-4xl mb-3">
-              {currentUser.username.split("")[0]}
+          <div className="w-20 rounded-full text-gray-400 bg-gray-200 overflow-hidden border h-20 flex items-center justify-center ">
+            <div className="text-5xl ">
+              {currentUser.username.split("")[0].toUpperCase()}
             </div>
           </div>
           <input

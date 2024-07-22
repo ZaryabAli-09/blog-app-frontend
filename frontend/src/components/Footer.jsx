@@ -23,21 +23,21 @@ export default function FooterCom() {
                 src={logo}
                 alt="logo"
               />
-              <div className="font-semibold text-xs whitespace-nowrap text-black md:text-lg ">
+              <div className="font-semibold text-xs whitespace-nowrap text-purple-600 md:text-lg ">
                 Tech Scrolls
               </div>
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6">
             <div>
-              <Footer.Title title="About" />
+              <Footer.Title title="About" className="text-purple-600" />
               <Footer.LinkGroup col>
                 <Footer.Link
                   href="https://github.com/ZaryabAli-09/Digital-marketing-agency-website"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Projects
+                  Author
                 </Footer.Link>
                 <Footer.Link
                   href="/about"
@@ -49,7 +49,7 @@ export default function FooterCom() {
               </Footer.LinkGroup>
             </div>
             <div>
-              <Footer.Title title="Follow us" />
+              <Footer.Title title="Follow us" className="text-purple-600" />
               <Footer.LinkGroup col>
                 <Footer.Link
                   href="https://github.com/ZaryabAli-09"
@@ -61,16 +61,9 @@ export default function FooterCom() {
                 <Footer.Link href="#">Discord</Footer.Link>
               </Footer.LinkGroup>
             </div>
-            <div>
-              <Footer.Title title="Legal" />
-              <Footer.LinkGroup col>
-                <Footer.Link href="#">Privacy Policy</Footer.Link>
-                <Footer.Link href="#">Terms &amp; Conditions</Footer.Link>
-              </Footer.LinkGroup>
-            </div>
           </div>
         </div>
-        <Footer.Divider />
+        <Footer.Divider className="text-black" />
         <div className="w-full sm:flex sm:items-center sm:justify-between">
           <Footer.Copyright
             href="#"
@@ -78,14 +71,26 @@ export default function FooterCom() {
             year={new Date().getFullYear()}
           />
           <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
-            <Footer.Icon href="#" icon={BsFacebook} />
-            <Footer.Icon href="#" icon={BsInstagram} />
-            <Footer.Icon href="#" icon={BsTwitter} />
             <Footer.Icon
+              className="text-purple-600 hover:text-purple-800"
+              href="#"
+              icon={BsFacebook}
+            />
+            <Footer.Icon
+              className="text-purple-600 hover:text-purple-800"
+              href="#"
+              icon={BsInstagram}
+            />
+            <Footer.Icon
+              className="text-purple-600 hover:text-purple-800"
+              href="#"
+              icon={BsTwitter}
+            />
+            <Footer.Icon
+              className="text-purple-600 hover:text-purple-800"
               href="https://github.com/sahandghavidel"
               icon={BsGithub}
             />
-            <Footer.Icon href="#" icon={BsDribbble} />
           </div>
         </div>
       </div>

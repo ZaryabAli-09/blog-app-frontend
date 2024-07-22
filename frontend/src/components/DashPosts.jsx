@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Spinner } from "flowbite-react";
+import ConfirmationDialog from "./ConfirmationDialog";
 const DashPosts = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user);
@@ -11,7 +12,14 @@ const DashPosts = () => {
   const [showMore, setShowMore] = useState(true);
   const [postId, setPostId] = useState("");
   const [spinner, setSpinner] = useState(false);
+  const [onPostDelete, setOnPostDelete] = useState(false);
+  const confirmationDialogRef = useRef(null);
 
+  useEffect(() => {
+    if (onPostDelete && confirmationDialogRef.current) {
+      confirmationDialogRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [onPostDelete]);
   const fetchPost = async () => {
     try {
       setSpinner(true);
@@ -79,13 +87,10 @@ const DashPosts = () => {
       console.log(error);
     }
   };
-  if (postId.length > 5) {
-    deletePostHandler();
-    setPostId("");
-  }
+
   return (
     <div className="overflow-x-auto w-full ">
-      <div className="lg:mx-20 mt-1 mb-10">
+      <div className="lg:mx-20 mt-1 mb-10 ">
         <table className="min-w-full table-auto whitespace-nowrap  shadow-lg border rounded ">
           <thead className="text-left font-semibold text-gray-500 text-md uppercase bg-gray-100">
             <tr>
@@ -126,7 +131,10 @@ const DashPosts = () => {
                     <td className=" px-3 py-3">{post.category}</td>
                     <td className=" px-3 py-3 ">
                       <span
-                        onClick={() => setPostId(post._id)}
+                        onClick={() => {
+                          setPostId(post._id);
+                          setOnPostDelete(true);
+                        }}
                         className="text-red-500 cursor-pointer "
                       >
                         <MdDelete className="text-lg hover:text-xl " />
@@ -152,6 +160,7 @@ const DashPosts = () => {
             )}
           </tbody>
         </table>
+
         <div className="w-full flex justify-center">
           {showMore && (
             <button
@@ -162,6 +171,19 @@ const DashPosts = () => {
             </button>
           )}
         </div>
+      </div>
+      <div ref={confirmationDialogRef} className="w-96 mx-auto mb-10">
+        {onPostDelete && (
+          <ConfirmationDialog
+            message={"Are you sure you want to delete this post?"}
+            onCancel={() => setOnPostDelete(false)}
+            onConfirm={() => {
+              currentUser.isAdmin && deletePostHandler();
+              setPostId("");
+              setOnPostDelete(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );

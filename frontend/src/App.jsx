@@ -12,6 +12,7 @@ import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import OnlyAdminRoutes from "./pages/OnlyAdminRoutes";
 import PostPage from "./pages/PostPage";
+import CategoryPage from "./pages/CategoryPage";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
+        <Route path="/category/:category" element={<CategoryPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>

@@ -49,6 +49,20 @@ const create = async (req, res, next) => {
   }
 };
 
+const getPostCategories = async (req, res) => {
+  try {
+    // Retrieve all unique categories from posts
+    const categories = await Post.aggregate([
+      { $group: { _id: "$category" } }, // Group by category
+      { $project: { _id: 0, category: "$_id" } }, // Project to only include category field
+    ]);
+
+    res.status(200).json({ categories: categories.map((cat) => cat.category) });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching categories", error });
+  }
+};
+
 const getPosts = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
@@ -150,4 +164,11 @@ const editPost = async (req, res, next) => {
     next(error);
   }
 };
-export { getPostsLength, create, getPosts, deletePost, editPost };
+export {
+  getPostsLength,
+  create,
+  getPosts,
+  deletePost,
+  editPost,
+  getPostCategories,
+};

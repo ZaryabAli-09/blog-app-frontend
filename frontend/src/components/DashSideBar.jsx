@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { CiUser } from "react-icons/ci";
@@ -9,8 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInSuccessAction } from "../reduxStore/store";
 import { MdDelete } from "react-icons/md";
 import { BsFileEarmarkPost } from "react-icons/bs";
+import ConfirmationDialog from "./ConfirmationDialog";
 const DashSideBar = () => {
   const dispatch = useDispatch();
+  const [signOutPopUp, setSignOutPopUp] = useState(false);
+  const [deleteAccPopUp, setDeleteAccPopUp] = useState(false);
   const currentUser = useSelector((state) => {
     return state.user;
   });
@@ -54,7 +57,7 @@ const DashSideBar = () => {
     }
   }
   return (
-    <div className="bg-sky-900 sm:w-52 sm:h-auto sm:min-h-screen p-2 ">
+    <div className="bg-sky-900 sm:w-56 sm:h-auto sm:min-h-screen p-2 ">
       {currentUser.isAdmin && (
         <Link
           className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800"
@@ -101,19 +104,39 @@ const DashSideBar = () => {
         </Link>
       )}{" "}
       <button
-        onClick={onSignOutHandler}
+        onClick={() => {
+          setSignOutPopUp(true);
+          setDeleteAccPopUp(false);
+        }}
         className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800"
       >
         <FaArrowRight className="mr-1 text-sm" />
         Sign Out
       </button>
       <button
-        onClick={onDeleteAccountHandler}
+        onClick={() => {
+          setDeleteAccPopUp(true);
+          setSignOutPopUp(false);
+        }}
         className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-red-500"
       >
         <MdDelete className="mr-1 text-sm" />
         Delete Account
       </button>
+      {signOutPopUp && (
+        <ConfirmationDialog
+          message="Are you sure you want to logout?"
+          onConfirm={onSignOutHandler}
+          onCancel={() => setSignOutPopUp(false)}
+        />
+      )}
+      {deleteAccPopUp && (
+        <ConfirmationDialog
+          message="Are you sure you want to delete this account?"
+          onConfirm={onDeleteAccountHandler}
+          onCancel={() => setDeleteAccPopUp(false)}
+        />
+      )}
     </div>
   );
 };

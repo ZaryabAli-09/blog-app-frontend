@@ -1,15 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { ImCross } from "react-icons/im";
 import { TiTick } from "react-icons/ti";
 import { Spinner } from "flowbite-react";
+import ConfirmationDialog from "./ConfirmationDialog";
+
 const DashUsers = () => {
   const [showMore, setShowMore] = useState(true);
   const [fetchedUsers, setFetchedUsers] = useState([]);
   const currentUser = useSelector((state) => state.user);
   const [deleteBtnClick, setDeleteBtnClick] = useState("");
   const [spinner, setSpinner] = useState(false);
+  const [onUserDelete, setOnUserDelete] = useState(false);
+  const confirmationDialogRef = useRef(null);
+
+  useEffect(() => {
+    if (onUserDelete && confirmationDialogRef.current) {
+      confirmationDialogRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [onUserDelete]);
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -57,10 +67,7 @@ const DashUsers = () => {
       console.log(error);
     }
   }
-  if (deleteBtnClick.length > 5 && currentUser.isAdmin) {
-    deleteUserHandler();
-    setDeleteBtnClick("");
-  }
+
   async function handleShowMore(e) {
     e.preventDefault();
     const startIndex = fetchedUsers.length;
@@ -98,9 +105,9 @@ const DashUsers = () => {
           </thead>
           <tbody>
             {currentUser.isAdmin && fetchedUsers.length > 0 ? (
-              fetchedUsers.map((user) => {
+              fetchedUsers.map((user, i) => {
                 return (
-                  <tr className="text-xs border">
+                  <tr key={i} className="text-xs border">
                     <td className=" px-4 py-2">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
@@ -122,7 +129,10 @@ const DashUsers = () => {
                     </td>
                     <td className=" px-4 py-2">
                       <span
-                        onClick={() => setDeleteBtnClick(user._id)}
+                        onClick={() => {
+                          setDeleteBtnClick(user._id);
+                          setOnUserDelete(true);
+                        }}
                         className="text-red-500 cursor-pointer hover:underline"
                       >
                         <MdDelete className="text-lg hover:text-xl" />
@@ -140,6 +150,7 @@ const DashUsers = () => {
             )}
           </tbody>
         </table>
+
         <div className="w-full flex justify-center">
           {showMore && (
             <button
@@ -150,6 +161,18 @@ const DashUsers = () => {
             </button>
           )}
         </div>
+      </div>
+      <div ref={confirmationDialogRef} className="w-96 mx-auto mb-10">
+        {onUserDelete && (
+          <ConfirmationDialog
+            message={"Are you sure you want to delete this user?"}
+            onCancel={() => setOnUserDelete(false)}
+            onConfirm={() => {
+              currentUser.isAdmin && deleteUserHandler();
+              setOnUserDelete(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );
