@@ -23,7 +23,9 @@ const DashPosts = () => {
   const fetchPost = async () => {
     try {
       setSpinner(true);
-      const res = await fetch(`http://localhost:3000/api/posts/getposts`);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/posts/getposts`
+      );
       const data = await res.json();
       if (res.ok) {
         console.log(data);
@@ -53,7 +55,9 @@ const DashPosts = () => {
     const startIndex = fetchedPosts.length;
     try {
       const res = await fetch(
-        `http://localhost:3000/api/posts/getposts?startIndex=${startIndex}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/posts/getposts?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -70,7 +74,9 @@ const DashPosts = () => {
   const deletePostHandler = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/posts/deletepost/${postId}/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/api/posts/deletepost/${postId}/${
+          currentUser._id
+        }`,
         {
           method: "DELETE",
           credentials: "include",

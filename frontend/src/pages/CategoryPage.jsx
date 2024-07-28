@@ -13,7 +13,9 @@ const CategoryPage = () => {
     const fetchCategoryPosts = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/posts/getposts?category=${category}`
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/posts/getposts?category=${category}`
         );
         const data = await res.json();
         if (res.ok) {

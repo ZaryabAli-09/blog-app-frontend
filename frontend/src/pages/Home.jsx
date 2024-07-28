@@ -17,7 +17,7 @@ const Home = () => {
     try {
       setSpinner(true);
       const res = await fetch(
-        `http://localhost:3000/api/posts/getposts?limit=11`
+        `${import.meta.env.VITE_API_URL}/api/posts/getposts?limit=11`
       );
       const data = await res.json();
       if (res.ok) {

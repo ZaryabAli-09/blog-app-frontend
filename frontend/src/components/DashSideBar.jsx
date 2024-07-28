@@ -19,10 +19,13 @@ const DashSideBar = () => {
   });
   async function onSignOutHandler() {
     try {
-      const response = await fetch(`http://localhost:3000/api/user/signout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/user/signout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         return dispatch(signInSuccessAction.signOut());
@@ -37,7 +40,7 @@ const DashSideBar = () => {
   async function onDeleteAccountHandler() {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/user/delete/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/api/user/delete/${currentUser._id}`,
         {
           method: "DELETE",
           headers: {

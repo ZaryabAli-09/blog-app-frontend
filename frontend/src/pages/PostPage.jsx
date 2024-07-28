@@ -11,7 +11,7 @@ const PostPage = () => {
     const fetchPost = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/posts/getposts?slug=${postSlug}`
+          `${import.meta.env.VITE_API_URL}/api/posts/getposts?slug=${postSlug}`
         );
         const data = await res.json();
         if (res.ok) {
@@ -28,7 +28,7 @@ const PostPage = () => {
     const fetchRecentPost = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/posts/getposts?limit=3`
+          `${import.meta.env.VITE_API_URL}/api/posts/getposts?limit=3`
         );
         const data = await res.json();
         if (res.ok) {

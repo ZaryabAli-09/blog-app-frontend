@@ -29,12 +29,15 @@ const CreatePost = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/posts/create`, {
-        method: "POST",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/posts/create`,
+        {
+          method: "POST",
 
-        body: formData,
-        credentials: "include",
-      });
+          body: formData,
+          credentials: "include",
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setLoading(false);

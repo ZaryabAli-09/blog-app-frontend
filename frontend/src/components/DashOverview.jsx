@@ -16,7 +16,7 @@ const DashOverview = () => {
   const fetchUsers = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/user/getusers-length`,
+        `${import.meta.env.VITE_API_URL}/api/user/getusers-length`,
         {
           credentials: "include",
         }
@@ -37,7 +37,7 @@ const DashOverview = () => {
   const fetchPosts = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/posts/getposts-length`,
+        `${import.meta.env.VITE_API_URL}/api/posts/getposts-length`,
 
         {
           credentials: "include",

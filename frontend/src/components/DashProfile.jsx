@@ -25,7 +25,7 @@ const DashProfile = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:3000/api/user/update/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/api/user/update/${currentUser._id}`,
         {
           method: "PUT",
           headers: {

@@ -24,9 +24,12 @@ const DashUsers = () => {
     const getUser = async () => {
       try {
         setSpinner(true);
-        const res = await fetch("http://localhost:3000/api/user/getusers", {
-          credentials: "include",
-        });
+        const res = await fetch(
+          "${import.meta.env.VITE_API_URL}/api/user/getusers",
+          {
+            credentials: "include",
+          }
+        );
         const data = await res.json();
         if (res.ok) {
           setSpinner(false);
@@ -49,7 +52,7 @@ const DashUsers = () => {
   async function deleteUserHandler() {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/user/delete/${deleteBtnClick}`,
+        `${import.meta.env.VITE_API_URL}/api/user/delete/${deleteBtnClick}`,
         {
           method: "DELETE",
         }
@@ -73,7 +76,9 @@ const DashUsers = () => {
     const startIndex = fetchedUsers.length;
     try {
       const res = await fetch(
-        `http://localhost:3000/api/user/getusers?startIndex=${startIndex}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/user/getusers?startIndex=${startIndex}`,
         {
           credentials: "include",
         }

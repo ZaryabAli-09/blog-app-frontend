@@ -39,7 +39,9 @@ const EditPost = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:3000/api/posts/editpost/${postId}/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/api/posts/editpost/${postId}/${
+          currentUser._id
+        }`,
         {
           method: "PUT",
           headers: {
@@ -71,7 +73,7 @@ const EditPost = () => {
     async function getSpecifcPost() {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/posts/getposts?postId=${postId}`
+          `${import.meta.env.VITE_API_URL}/api/posts/getposts?postId=${postId}`
         );
         const data = await res.json();
         if (res.ok) {
