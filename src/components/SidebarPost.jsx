@@ -13,7 +13,7 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          "${import.meta.env.VITE_API_URL}/api/posts/get-categories"
+          `${import.meta.env.VITE_API_URL}/api/posts/get-categories`
         );
         const data = await res.json();
         if (res.ok) {
