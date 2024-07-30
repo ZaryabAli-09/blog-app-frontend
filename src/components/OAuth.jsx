@@ -1,6 +1,6 @@
 import React from "react";
 import fireAPP from "../firebase.js";
-import axios from "axios";
+
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
