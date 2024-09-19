@@ -17,7 +17,7 @@ const Header = () => {
   }
   return (
     <>
-      <div className="flex items-center justify-between bg-white text-gray-600 h-20 shadow-md">
+      <div className="flex items-center justify-between bg-white text-gray-600 h-20 shadow-md sticky top-0 z-50">
         <div className="ml-3 flex items-center space-x-2">
           <img
             style={{ width: "30px", borderRadius: "20px" }}
@@ -32,11 +32,9 @@ const Header = () => {
         <nav className="text-sm  md:text-base hidden md:block">
           <ul className="flex space-x-6">
             <Link to="/" className="hover:text-purple-500">
-              Home
+              News
             </Link>
-            <Link to="/blogs" className="hover:text-purple-500">
-              Blogs
-            </Link>
+
             <Link to="/about" className="hover:text-purple-500">
               About
             </Link>

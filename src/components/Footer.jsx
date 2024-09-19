@@ -1,12 +1,6 @@
 import { Footer } from "flowbite-react";
 import { Link } from "react-router-dom";
-import {
-  BsFacebook,
-  BsInstagram,
-  BsTwitter,
-  BsGithub,
-  BsDribbble,
-} from "react-icons/bs";
+import { BsFacebook, BsInstagram, BsTwitter, BsGithub } from "react-icons/bs";
 import logo from "../assets/logo.png";
 export default function FooterCom() {
   return (
@@ -33,18 +27,11 @@ export default function FooterCom() {
               <Footer.Title title="About" className="text-purple-600" />
               <Footer.LinkGroup col>
                 <Footer.Link
-                  href="https://github.com/ZaryabAli-09/Digital-marketing-agency-website"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Author
-                </Footer.Link>
-                <Footer.Link
                   href="/about"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Tech Scrolls
+                  About us
                 </Footer.Link>
               </Footer.LinkGroup>
             </div>
@@ -58,7 +45,6 @@ export default function FooterCom() {
                 >
                   Github
                 </Footer.Link>
-                <Footer.Link href="#">Discord</Footer.Link>
               </Footer.LinkGroup>
             </div>
           </div>
@@ -73,22 +59,18 @@ export default function FooterCom() {
           <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
             <Footer.Icon
               className="text-purple-600 hover:text-purple-800"
-              href="#"
+              href="https://www.facebook.com/profile.php?id=100006969497679&mibextid=ZbWKwL"
               icon={BsFacebook}
             />
             <Footer.Icon
               className="text-purple-600 hover:text-purple-800"
-              href="#"
+              href="https://www.instagram.com/zky_07?igsh=Yng5dms4eTViY2dz"
               icon={BsInstagram}
             />
+
             <Footer.Icon
               className="text-purple-600 hover:text-purple-800"
-              href="#"
-              icon={BsTwitter}
-            />
-            <Footer.Icon
-              className="text-purple-600 hover:text-purple-800"
-              href="https://github.com/sahandghavidel"
+              href="https://github.com/ZaryabAli-09"
               icon={BsGithub}
             />
           </div>

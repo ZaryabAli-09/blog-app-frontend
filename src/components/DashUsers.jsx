@@ -117,11 +117,12 @@ const DashUsers = () => {
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td className=" px-4 py-2">
-                      <img
-                        className="w-10 h-10 object-cover rounded-full"
-                        src={user.profilePicture}
-                        alt="profilepicture"
-                      />
+                      <div
+                        to="/dashboard?tab=profile"
+                        className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold hover:bg-purple-700"
+                      >
+                        {user.username[0].toUpperCase()}
+                      </div>
                     </td>
                     <td className=" px-4 py-2">{user.username}</td>
                     <td className=" px-4 py-2">{user.email}</td>

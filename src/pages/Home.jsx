@@ -46,9 +46,14 @@ const Home = () => {
       "Zaryab is a passionate full stack web developer and side hustle blogger.",
   };
   const socialLinks = [
-    { platform: "Twitter", url: "https://twitter.com/janedoe" },
-    { platform: "LinkedIn", url: "https://linkedin.com/in/janedoe" },
-    { platform: "Instagram", url: "https://instagram.com/janedoe" },
+    {
+      platform: "LinkedIn",
+      url: "https://www.linkedin.com/in/zaryab-ali-softdev?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    },
+    {
+      platform: "Instagram",
+      url: "https://www.instagram.com/zky_07?igsh=Yng5dms4eTViY2dz",
+    },
   ];
   const recentPosts = allPosts ? allPosts.slice(0, 5) : [];
   const categories = [

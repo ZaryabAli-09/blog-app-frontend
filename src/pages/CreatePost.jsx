@@ -76,9 +76,9 @@ const CreatePost = () => {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="uncategorized">Select category</option>
-            <option value="javascript">Javascript</option>
-            <option value="reactjs">React js</option>
-            <option value="mongodb">Mongo DB</option>
+            <option value="javascript">general</option>
+            <option value="reactjs">inspiration</option>
+            <option value="mongodb">technology</option>
           </select>
         </div>
         <div className="flex gap-4 items-center justify-between border border-sky-900 p-3 rounded">
