@@ -22,19 +22,17 @@ const About = () => {
             MY MISSION
           </h3>
           <p className="">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry’s standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.lorem10 Lorem ipsum
-            dolor sit amet consectetur, adipisicing elit. Minima, sapiente.
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore,
-            suscipit? Et assumenda molestias distinctio, eaque doloribus enim
-            odio corporis dolorum?
+            I am Zaryab Ali, a final-year Software Engineering student at Iqra
+            National University, Peshawar, with roots in Katlang, a vibrant area
+            in the Mardan district of Khyber Pakhtunkhwa, Pakistan. As a
+            full-stack MERN developer, I excel in leading and managing web
+            development projects, offering tailored business solutions through
+            advanced technologies like React.js, Node.js, and MongoDB. My
+            expertise extends to integrating Framer Motion for creating visually
+            engaging animations that enhance user experiences on websites.
+            Alongside my technical skills, I am proficient in creative tools
+            like Canva and Adobe Illustrator, enabling me to bring a unique
+            blend of design and development to every project.
           </p>
         </div>
         <div className="w-full p-5 md:w-[50%]">

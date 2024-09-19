@@ -20,16 +20,15 @@ const Contact = () => {
             Send me a message for business inquiries
           </h3>
           <p className="">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            elementum erat nec risus mollis sollicitudin. Aenean semper eget
-            libero quis feugiat. Pellentesque tortor leo, interdum sed rutrum
-            eu, euismod at sapien.
+            I am Zaryab Ali, a final-year Software Engineering student at Iqra
+            National University, Peshawar, with roots in Katlang, a vibrant area
+            in the Mardan district of Khyber Pakhtunkhwa, Pakistan.
             <br /> <br />
-            Address: 341 Blu Ocean Drive, Melbourne, Victoria.
+            katlang mardan kpk pakistan
             <br /> <br />
-            Phone: +61434188000
+            Phone: 3323231690
             <br /> <br />
-            Email: hello@hotmail.com
+            Email: zaryab249@gmail.com@hotmail.com
           </p>
         </div>
         <div className="w-full p-5 md:w-[50%] ">
@@ -40,19 +39,28 @@ const Contact = () => {
               className="border rounded border-gray-200"
               placeholder="Enter your name"
               type="text"
+              required
             />
             <input
               className="border rounded border-gray-200"
               placeholder="Enter your email"
               type="text"
+              required
             />
             <textarea
               className="border border-gray-200 rounded"
               placeholder="Enter your message here"
               cols="5"
               rows="5"
+              required
             ></textarea>
-            <button className="rounded bg-purple-600 text-white p-3">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                alert("Query submitted successfully");
+              }}
+              className="rounded bg-purple-600 text-white p-3"
+            >
               Submit
             </button>
           </form>
