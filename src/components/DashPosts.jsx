@@ -37,7 +37,7 @@ const DashPosts = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+      // silent
     } finally {
       setStaffPickLoading((prev) => ({ ...prev, [postId]: false }));
     }
@@ -56,7 +56,6 @@ const DashPosts = () => {
       );
       const data = await res.json();
       if (res.ok) {
-        console.log(data);
         setSpinner(false);
         setFetchedPosts(data.posts);
         if (data.posts.length < 9) {
@@ -65,12 +64,10 @@ const DashPosts = () => {
       }
       if (!res.ok) {
         setSpinner(false);
-        console.log(data);
         return;
       }
     } catch (error) {
       setSpinner(false);
-      console.log(error.message);
     }
   };
 
@@ -95,7 +92,7 @@ const DashPosts = () => {
         setShowMore(false);
       }
     } catch (error) {
-      console.log(error.message);
+      // silent
     }
   }
 
@@ -115,108 +112,119 @@ const DashPosts = () => {
         setFetchedPosts((prev) => prev.filter((post) => post._id !== postId));
       }
       if (!res.ok) {
-        console.log(data);
+        setSpinner(false);
       }
     } catch (error) {
-      console.log(error);
+      // silent
     }
   };
 
   return (
-    <div className="overflow-x-auto w-full ">
-      <div className="lg:mx-20 mt-1 mb-10 ">
-        <table className="min-w-full table-auto whitespace-nowrap  shadow-lg border rounded ">
-          <thead className="text-left font-semibold text-gray-500 text-md uppercase bg-gray-100">
-            <tr>
-              <th className=" px-3 py-3">UPDATED</th>
-              <th className=" px-3 py-3">IMAGE</th>
-              <th className=" px-3 py-3">POST TITLE</th>
-              <th className=" px-3 py-3">CATEGORY</th>
-              <th className=" px-3 py-3">STAFF PICK</th>
-              <th className=" px-3 py-3">DELETE</th>
-              <th className=" px-3 py-3">EDIT</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentUser.isAdmin && fetchedPosts.length > 0 ? (
-              fetchedPosts.map((post, i) => {
-                return (
-                  <tr
-                    key={i}
-                    className=" text-sm hover:bg-gray-200 border cursor-pointer"
-                  >
-                    <td className=" px-3 py-3">
-                      {new Date(post.updatedAt).toLocaleDateString()}
-                    </td>
-                    <td className=" px-3 py-3">
-                      <img
-                        className="w-20 h-10 object-cover"
-                        src={post.image}
-                        alt="post-image"
-                      />
-                    </td>
-                    <td className="px-3 py-3">
-                      <span
-                        className="hover:text-blue-500 hover:underline "
-                        onClick={() => navigate(`/post/${post.slug}`)}
-                      >
-                        {post.title}
-                      </span>
-                    </td>
-                    <td className=" px-3 py-3">{post.category}</td>
-                    <td className=" px-3 py-3">
-                       <button
-                         onClick={() => toggleStaffPick(post._id)}
-                         disabled={staffPickLoading[post._id]}
-                         className={`px-3 py-1 rounded text-xs font-semibold ${
-                           post.staffPick
-                             ? "bg-green-500 text-white"
-                             : "bg-gray-300 text-gray-700"
-                         }`}
-                       >
-                         {staffPickLoading[post._id]
-                           ? "..."
-                           : post.staffPick
-                           ? "Yes"
-                           : "No"}
-                       </button>
-                    </td>
-                    <td className=" px-3 py-3 ">
-                      <span
-                        onClick={() => {
-                          setPostId(post._id);
-                          setOnPostDelete(true);
-                        }}
-                        className="text-red-500 cursor-pointer "
-                      >
-                        <MdDelete className="text-lg hover:text-xl " />
-                      </span>
-                    </td>
-                    <td className=" px-3 py-3">
-                      <Link
-                        to={`/edit-post/${post._id}`}
-                        className="text-blue-500 "
-                      >
-                        <FaEdit className="text-lg hover:text-xl " />
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : fetchedPosts && fetchedPosts.length <= 0 ? (
-              <div className="text-center p-3">No posts</div>
-            ) : (
-              <div className=" flex justify-center   my-5 ">
-                <Spinner className="w-10 h-10" />
-              </div>
-            )}
-          </tbody>
-        </table>
+    <div className="overflow-x-auto w-full">
+      <div className="lg:mx-20 mt-1 mb-10">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+          <table className="min-w-full table-auto whitespace-nowrap">
+            <thead className="text-left font-semibold text-gray-500 text-sm uppercase bg-gray-50">
+              <tr>
+                <th className="px-4 py-3">Updated</th>
+                <th className="px-4 py-3">Image</th>
+                <th className="px-4 py-3">Post Title</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Staff Pick</th>
+                <th className="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentUser.isAdmin && fetchedPosts.length > 0 ? (
+                fetchedPosts.map((post, i) => {
+                  return (
+                    <tr key={i} className="text-sm border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 text-gray-600">
+                        {new Date(post.updatedAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        <img
+                          className="w-20 h-12 object-cover rounded-lg"
+                          src={post.image}
+                          alt="post-image"
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className="text-purple-600 font-medium hover:underline cursor-pointer"
+                          onClick={() => navigate(`/post/${post.slug}`)}
+                        >
+                          {post.title}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium capitalize">
+                          {post.category}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => toggleStaffPick(post._id)}
+                          disabled={staffPickLoading[post._id]}
+                          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                            post.staffPick
+                              ? "bg-green-100 text-green-700 border border-green-200"
+                              : "bg-gray-100 text-gray-600 border border-gray-200"
+                          }`}
+                        >
+                          {staffPickLoading[post._id]
+                            ? "..."
+                            : post.staffPick
+                            ? "Yes"
+                            : "No"}
+                        </button>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <span
+                            onClick={() => {
+                              setPostId(post._id);
+                              setOnPostDelete(true);
+                            }}
+                            className="text-red-500 cursor-pointer hover:text-red-700 transition-colors"
+                          >
+                            <MdDelete className="text-lg" />
+                          </span>
+                          <Link
+                            to={`/edit-post/${post._id}`}
+                            className="text-blue-500 hover:text-blue-700 transition-colors"
+                          >
+                            <FaEdit className="text-lg" />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : fetchedPosts && fetchedPosts.length <= 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center p-8 text-gray-500">
+                    <div className="flex flex-col items-center justify-center">
+                      <p className="text-lg font-medium">No posts found</p>
+                      <p className="text-sm text-gray-400">Create your first post to get started</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center p-8">
+                    <Spinner className="w-8 h-8 text-purple-600 mx-auto" />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center mt-6">
           {showMore && (
             <button
-              className="underline text-teal-500 self-center "
+              className="text-purple-600 font-medium hover:text-purple-800 transition-colors flex items-center gap-2"
               onClick={handleShowMore}
             >
               Show More

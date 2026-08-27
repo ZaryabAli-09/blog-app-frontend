@@ -10,8 +10,8 @@ const Home = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user);
   const [latestTopPost, setLatestTopPost] = useState(null);
-  const [allPosts, setAllPosts] = useState(null);
-  const [spinner, setSpinner] = useState(false);
+  const [allPosts, setAllPosts] = useState([]);
+  const [spinner, setSpinner] = useState(true);
 
   const fetchAllPosts = async () => {
     try {
@@ -22,15 +22,13 @@ const Home = () => {
       const data = await res.json();
       if (res.ok) {
         setSpinner(false);
-        setLatestTopPost(data.posts[0]);
-        setAllPosts(data.posts.slice(1));
+        setLatestTopPost(data.posts[0] || null);
+        setAllPosts(data.posts.slice(1) || []);
       } else {
         setSpinner(false);
-        console.log("error while fetching all posts");
       }
     } catch (err) {
       setSpinner(false);
-      console.log(err);
     }
   };
 
@@ -38,7 +36,6 @@ const Home = () => {
     fetchAllPosts();
   }, [currentUser]);
 
-  // Sample data for sidebar
   const author = {
     name: "Zaryab Ali",
     picture: "https://via.placeholder.com/150",
@@ -55,7 +52,7 @@ const Home = () => {
       url: "https://www.instagram.com/zky_07?igsh=Yng5dms4eTViY2dz",
     },
   ];
-  const recentPosts = allPosts ? allPosts.slice(0, 5) : [];
+  const recentPosts = allPosts.slice(0, 5);
   const categories = [
     "Technology",
     "Health",
@@ -65,76 +62,78 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <div className="flex flex-grow flex-col sm:flex-row">
         <main className="w-full md:w-4/5 p-4">
           <div className="w-full max-w-6xl mx-auto">
-            <h1 className="bg-gray-50 mb-2 pl-5 py-4 text-3xl font-bold text-purple-600">
+            <h1 className="text-3xl font-bold text-purple-600 mb-6 pl-5 border-l-4 border-purple-600">
               Latest Stories
             </h1>
+
             {latestTopPost && (
               <div
                 onClick={() => navigate(`/post/${latestTopPost.slug}`)}
-                className="card mx-auto relative hover:cursor-pointer rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 mb-8"
-                style={{
-                  width: "100%",
-                  padding: "20px",
-                  backgroundColor: "rgb(246,246,246)",
-                  border: "none",
-                }}
+                className="relative overflow-hidden rounded-2xl shadow-xl cursor-pointer group mb-10 bg-white"
               >
-                <img
-                  src={latestTopPost.image}
-                  className="w-full h-80 object-cover hover:opacity-90 transition-opacity duration-300"
-                  alt="..."
-                />
-                <div className="absolute bottom-8 left-8  bg-opacity-50 text-white p-4 rounded-lg">
-                  <h5 className="card-title text-xl uppercase font-bold">
-                    {latestTopPost.title}
-                  </h5>
-                  <p
-                    className="text-sm mt-2"
-                    dangerouslySetInnerHTML={{
-                      __html: latestTopPost.content.slice(0, 110),
-                    }}
-                  ></p>
-                  <div className="space-x-3 mt-3">
-                    <span className="bg-purple-500 p-1 text-sm rounded text-white font-bold">
-                      {new Date(latestTopPost.createdAt).toLocaleDateString()}
-                    </span>
-                    <span className="bg-purple-500 p-1 text-sm rounded text-white font-bold">
-                      {latestTopPost.category.toUpperCase()}
-                    </span>
+                <div className="relative h-80 sm:h-96 md:h-[500px]">
+                  <img
+                    src={latestTopPost.image}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    alt={latestTopPost.title}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="bg-purple-600 px-3 py-1 text-sm rounded-full font-medium">
+                        {new Date(latestTopPost.createdAt).toLocaleDateString()}
+                      </span>
+                      <span className="bg-white/20 backdrop-blur-sm px-3 py-1 text-sm rounded-full font-medium">
+                        {latestTopPost.category.toUpperCase()}
+                      </span>
+                    </div>
+                    <h2 className="text-2xl sm:text-4xl font-bold mb-3 leading-tight group-hover:text-purple-300 transition-colors">
+                      {latestTopPost.title}
+                    </h2>
+                    <p
+                      className="text-gray-200 text-sm sm:text-base max-w-3xl line-clamp-2"
+                      dangerouslySetInnerHTML={{
+                        __html: latestTopPost.content.slice(0, 150),
+                      }}
+                    ></p>
                   </div>
                 </div>
               </div>
             )}
-            <div className="cards md:grid sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-6  md:text-md md:m-2 ">
-              {allPosts ? (
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:text-md md:m-2">
+              {allPosts.length > 0 ? (
                 allPosts.map((post) => (
                   <div
                     key={post._id}
-                    className="p-5 bg-white hover:opacity-80  duration-300 relative hover:cursor-pointer rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105"
                     onClick={() => navigate(`/post/${post.slug}`)}
+                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col"
                   >
-                    <img
-                      src={post.image}
-                      className="w-full h-48 object-cover"
-                      alt="..."
-                    />
-                    <div className="p-4">
-                      <h5 className="card-title  text-md sm:text-lg md:text-lg font-semibold text-gray-900 mb-2">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={post.image}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                        alt={post.title}
+                      />
+                      <span className="absolute top-3 right-3 bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                        {post.category.toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="p-5 flex flex-col flex-grow">
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-purple-600 transition-colors">
                         {post.title}
-                      </h5>
+                      </h3>
                       <p
-                        className="text-sm text-gray-700 mb-4"
+                        className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3"
                         dangerouslySetInnerHTML={{
                           __html: post.content.slice(0, 100),
                         }}
-                      >
-                        {/* {post.content.slice(0, 100)}... */}
-                      </p>
-                      <div className="flex items-center justify-between">
+                      ></p>
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex items-center space-x-2">
                           <img
                             src={
@@ -144,25 +143,24 @@ const Home = () => {
                             className="w-8 h-8 rounded-full object-cover"
                             alt={post.author?.username}
                           />
-                          <span className="text-sm text-gray-600">
-                            {post.author?.username}
+                          <span className="text-sm text-gray-600 font-medium">
+                            {post.author?.username || "Anonymous"}
                           </span>
                         </div>
-                        <div className="space-x-3 text-sm text-gray-600">
-                          <span>
-                            {new Date(post.createdAt).toLocaleDateString()}
-                          </span>
-                          <span className="bg-purple-500 p-1 text-sm rounded text-white font-bold">
-                            {post.category}
-                          </span>
-                        </div>
+                        <span className="text-xs text-gray-500">
+                          {new Date(post.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="flex items-center justify-center w-full mt-5">
-                  <Spinner className="flex justify-center w-30 h-20" />
+                <div className="col-span-full flex items-center justify-center w-full mt-5">
+                  {spinner ? (
+                    <Spinner className="w-10 h-10 text-purple-600" />
+                  ) : (
+                    <p className="text-gray-500">No posts yet.</p>
+                  )}
                 </div>
               )}
             </div>

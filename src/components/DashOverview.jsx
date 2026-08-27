@@ -26,11 +26,8 @@ const DashOverview = () => {
         setTotalUsers(data.totalUsers);
         setLastMonthUsers(data.lastMonthUsers);
       }
-      if (!res.ok) {
-        console.log(data);
-      }
     } catch (error) {
-      console.log(error.message);
+      // silent
     }
   };
 
@@ -49,7 +46,7 @@ const DashOverview = () => {
         setLastMonthPosts(data.lastMonthPosts);
       }
     } catch (error) {
-      console.log(error.message);
+      // silent
     }
   };
   useEffect(() => {
@@ -59,34 +56,34 @@ const DashOverview = () => {
 
   return (
     <div className="p-3 md:mx-auto w-full">
-      <div className="flex-wrap flex gap-4 justify-center mt-10">
-        <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md border">
-          <div className="flex justify-between">
-            <div className="">
-              <h3 className="text-gray-500 text-md uppercase">Total Posts</h3>
-              <p className="text-2xl">{totalPosts}</p>
+      <div className="flex-wrap flex gap-6 justify-center mt-10">
+        <div className="flex flex-col p-6 gap-4 md:w-72 w-full rounded-xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-shadow">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-gray-500 text-sm uppercase tracking-wide">Total Posts</h3>
+              <p className="text-3xl font-bold text-gray-800">{totalPosts}</p>
             </div>
-            <HiDocumentText className="bg-lime-600  text-white rounded-full text-5xl p-3 shadow-lg" />
+            <HiDocumentText className="bg-purple-600 text-white rounded-full text-5xl p-3 shadow-lg" />
           </div>
-          <div className="flex  gap-2 text-sm">
-            <span className="text-green-500 flex items-center">
-              <HiArrowNarrowUp />
+          <div className="flex gap-2 text-sm">
+            <span className="text-green-500 flex items-center font-medium">
+              <HiArrowNarrowUp className="mr-1" />
               {lastMonthPosts}
             </span>
             <div className="text-gray-500">Last month</div>
           </div>
         </div>
-        <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md border">
-          <div className="flex justify-between">
-            <div className="">
-              <h3 className="text-gray-500 text-md uppercase">Total Users</h3>
-              <p className="text-2xl">{totalUsers}</p>
+        <div className="flex flex-col p-6 gap-4 md:w-72 w-full rounded-xl shadow-md border border-gray-200 bg-white hover:shadow-lg transition-shadow">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-gray-500 text-sm uppercase tracking-wide">Total Users</h3>
+              <p className="text-3xl font-bold text-gray-800">{totalUsers}</p>
             </div>
-            <HiOutlineUserGroup className="bg-lime-600  text-white rounded-full text-5xl p-3 shadow-lg" />
+            <HiOutlineUserGroup className="bg-purple-600 text-white rounded-full text-5xl p-3 shadow-lg" />
           </div>
-          <div className="flex  gap-2 text-sm">
-            <span className="text-green-500 flex items-center">
-              <HiArrowNarrowUp />
+          <div className="flex gap-2 text-sm">
+            <span className="text-green-500 flex items-center font-medium">
+              <HiArrowNarrowUp className="mr-1" />
               {lastMonthUsers}
             </span>
             <div className="text-gray-500">Last month</div>

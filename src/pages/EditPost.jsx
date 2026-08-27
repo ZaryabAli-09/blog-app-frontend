@@ -3,6 +3,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Spinner } from "flowbite-react";
+
 const EditPost = () => {
   const navigate = useNavigate();
   const param = useParams();
@@ -10,25 +12,27 @@ const EditPost = () => {
   const currentUser = useSelector((state) => state.user);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState("");
   const [content, setContent] = useState("");
-  const [uploadBtnClick, setUploadBtnClick] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [imageError, setImageError] = useState(null);
 
-  //  const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const PLACEHOLDER_IMAGE = "https://via.placeholder.com/800x400?text=No+Image";
 
   async function publishPostHandler(e) {
     e.preventDefault();
     if (!title || !category || !content) {
       return setErrorMessage("please fill all the required fields");
     }
-    const formData = {
-      title,
-      category,
-      // image: file,
-      content,
-    };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("content", content);
+    if (file) {
+      formData.append("file", file);
+    }
     try {
       setLoading(true);
       const response = await fetch(
@@ -37,17 +41,13 @@ const EditPost = () => {
         }`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          body: formData,
           credentials: "include",
         }
       );
       const data = await response.json();
       if (response.ok) {
         setLoading(false);
-
         setErrorMessage("Post updated successfully");
         setTimeout(() => {
           navigate(`/post/${data.slug}`);
@@ -72,21 +72,33 @@ const EditPost = () => {
         if (res.ok) {
           setCategory(data.posts[0].category);
           setContent(data.posts[0].content);
-          setFile(data.posts[0].image);
+          setPreview(data.posts[0].image || PLACEHOLDER_IMAGE);
           setTitle(data.posts[0].title);
         }
       } catch (error) {
-        console.log(error);
+        // silent
       }
     }
     getSpecifcPost();
-  }, []);
+  }, [postId]);
+
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile.type.split("/")[0] !== "image") {
+        return setImageError("Please provide an image file");
+      }
+      setFile(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile));
+      setImageError(null);
+    }
+  };
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl font-semibold">Edit a post</h1>
-      <form className="flex flex-col gap-4 mt-2">
-        <div className="flex flex-col gap-2 sm:flex-row justify-between">
+      <h1 className="text-center text-3xl font-semibold mb-8 text-gray-800">Edit a post</h1>
+      <form onSubmit={publishPostHandler} className="flex flex-col gap-5 mt-2">
+        <div className="flex flex-col gap-3 sm:flex-row justify-between">
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -94,78 +106,74 @@ const EditPost = () => {
             placeholder="Title"
             required
             id="title"
-            className="rounded sm:w-full"
+            className="rounded sm:w-full border border-gray-300 px-4 py-2 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-colors"
           />
           <select
             value={category}
             required
-            className="rounded"
+            className="rounded border border-gray-300 px-4 py-2 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-colors"
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="uncategorized">Select category</option>
-            <option value="javascript">Javascript</option>
-            <option value="reactjs">React js</option>
+            <option value="general">General</option>
+            <option value="inspiration">Inspiration</option>
+            <option value="technology">Technology</option>
+            <option value="reactjs">React JS</option>
             <option value="mongodb">Mongo DB</option>
           </select>
         </div>
-        {/* <div className="flex gap-4 items-center justify-between border border-sky-900 p-3 rounded">
-          <input
-            required
-            accept="image/*"
-            type="file"
-            onChange={(e) => {
-              if (e.target.files[0].type.split("/")[0] !== "image") {
-                return setImageFileUploadError("Please provide image");
-              }
-              setFile(e.target.files[0]);
-            }}
-            className="rounded bg-sky-300 p-2"
-          />
-          <button
-            onClick={uploadImageHandler}
-            className="p-2 rounded border-black border font-bold text-sm  hover:bg-sky-700 hover:text-white"
-          >
-            {uploadBtnClick && imageFileUploadProgress < 100
-              ? "uploading..."
-              : "Upload Image"}
-          </button>
-        </div> */}
-        {/* {imageFileUploadError ? (
-          <div className="text-white bg-red-400 p-2 w-full rounded text-center bg-opacity-70 ">
-            {imageFileUploadError}
-          </div>
-        ) : (
-          ""
-        )} */}
 
-        {file ? <img src={file} alt="" /> : ""}
+        <div className="flex flex-col gap-3">
+          <label className="cursor-pointer bg-purple-50 text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-100 transition-colors w-fit">
+            Change Image
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+          </label>
+          {imageError && (
+            <div className="text-red-500 text-sm">{imageError}</div>
+          )}
+          <div className="rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+            <img
+              src={preview || PLACEHOLDER_IMAGE}
+              alt="Preview"
+              className="w-full h-64 object-cover"
+              onError={(e) => {
+                e.target.src = PLACEHOLDER_IMAGE;
+              }}
+            />
+          </div>
+        </div>
+
         <ReactQuill
           value={content}
           required
           onChange={(value) => setContent(value)}
-          className="h-72"
+          className="h-72 bg-white rounded-lg border border-gray-300"
           theme="snow"
           placeholder="write something here"
         />
         <button
-          className="w-full bg-sky-900 mt-10 p-3 text-white rounded hover:bg-sky-800"
-          onClick={publishPostHandler}
+          type="submit"
+          className="w-full bg-purple-600 mt-6 p-3 text-white rounded hover:bg-purple-700 transition-colors font-semibold"
         >
-          {loading ? "loading..." : "Update"}
+          {loading ? <Spinner className="inline mr-2" size="sm" /> : null}
+          {loading ? "Updating..." : "Update Post"}
         </button>
       </form>
-      {errorMessage ? (
+      {errorMessage && (
         <div
-          className={`p-2 mt-1 ${
+          className={`p-2 mt-4 ${
             errorMessage === "Post edited successfully"
-              ? "bg-green-400"
-              : "bg-red-400"
+              ? "bg-green-100 text-green-700 border border-green-400"
+              : "bg-red-100 text-red-700 border border-red-400"
           } text-white w-full rounded text-center bg-opacity-70`}
         >
           {errorMessage}
         </div>
-      ) : (
-        ""
       )}
     </div>
   );

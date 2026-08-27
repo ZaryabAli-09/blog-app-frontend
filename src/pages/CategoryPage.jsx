@@ -20,11 +20,9 @@ const CategoryPage = () => {
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
-        } else {
-          console.log("Error fetching category posts");
         }
       } catch (err) {
-        console.log(err);
+        // silent
       } finally {
         setLoading(false);
       }
@@ -34,13 +32,13 @@ const CategoryPage = () => {
   }, [category]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4 ml-4 text-purple-600">
-        {category.toUpperCase()}{" "}
+    <div className="w-full max-w-6xl mx-auto p-4 min-h-screen bg-gray-50">
+      <h1 className="text-4xl font-bold mb-8 text-purple-600 border-l-4 border-purple-600 pl-4 capitalize">
+        {category}
       </h1>
       {loading ? (
-        <div className="flex items-center justify-center w-full mt-5">
-          <Spinner className="flex justify-center w-30 h-20" />
+        <div className="flex items-center justify-center w-full mt-20">
+          <Spinner className="w-10 h-10 text-purple-600" />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,36 +49,53 @@ const CategoryPage = () => {
                 onClick={() => {
                   navigate(`/post/${post.slug}`);
                 }}
-                className="p-5 bg-white hover:opacity-80 transition-opacity duration-300 relative hover:cursor-pointer rounded-lg overflow-hidden shadow-lg transform hover:scale-105"
+                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col"
               >
-                <img
-                  src={post.image}
-                  className="w-full h-48 object-cover"
-                  alt={post.title}
-                />
-                <div className="p-4">
-                  <h5 className="card-title text-lg font-semibold text-gray-900 mb-2 ">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={post.image}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    alt={post.title}
+                  />
+                  <span className="absolute top-3 right-3 bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                    {post.category.toUpperCase()}
+                  </span>
+                </div>
+                <div className="p-5 flex flex-col flex-grow">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-purple-600 transition-colors">
                     {post.title}
-                  </h5>
+                  </h3>
                   <p
-                    className="text-sm text-gray-700 mb-4"
+                    className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3"
                     dangerouslySetInnerHTML={{
                       __html: post.content.slice(0, 100),
                     }}
                   />
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center space-x-2">
+                      <img
+                        src={
+                          post.author?.profilePicture ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.username || 'A')}&background=random`
+                        }
+                        className="w-8 h-8 rounded-full object-cover"
+                        alt={post.author?.username}
+                      />
+                      <span className="text-sm text-gray-600 font-medium">
+                        {post.author?.username || "Anonymous"}
+                      </span>
+                    </div>
+                    <span className="text-xs text-gray-500">
                       {new Date(post.createdAt).toLocaleDateString()}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      {post.category}
                     </span>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <p>No posts found in this category.</p>
+            <div className="col-span-full text-center py-20">
+              <p className="text-gray-500 text-lg">No posts found in this category.</p>
+            </div>
           )}
         </div>
       )}

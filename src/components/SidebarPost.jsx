@@ -15,16 +15,14 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/posts/get-categories`
+          `${import.meta.env.VITE_API_URL}/api/posts/get-categories`,
         );
         const data = await res.json();
         if (res.ok) {
           setCategories(data.categories);
-        } else {
-          console.log("Error fetching categories");
         }
       } catch (err) {
-        console.log(err);
+        // silent
       }
     };
 
@@ -32,14 +30,14 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
       try {
         setStaffPicksLoading(true);
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/posts/staff-picks`
+          `${import.meta.env.VITE_API_URL}/api/posts/staff-picks`,
         );
         const data = await res.json();
         if (res.ok) {
           setStaffPicks(data.posts || []);
         }
       } catch (err) {
-        console.log(err);
+        // silent
       } finally {
         setStaffPicksLoading(false);
       }
@@ -50,44 +48,46 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
   }, []);
 
   return (
-    <aside className="w-[] sm:w-[200px] md:w-[260px] p-4 bg-gray-50 mt-4 ">
+    <aside className="w-full sm:w-[200px] md:w-[260px] p-4 bg-white mt-4 md:mt-0 rounded-xl shadow-sm">
       <div className="flex items-center mb-6 sm:hidden md:block">
-        {author.picture ? (
+        {/* {author.picture ? (
           <img
             src={author.picture}
             alt={author.name}
-            className="md:ml-5 w-16 h-16 rounded-full object-cover"
+            className="md:ml-5 w-16 h-16 rounded-full object-cover border-2 border-purple-500"
           />
         ) : (
-          <div className="md:ml-5 w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+          <div className="md:ml-5 w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center text-white text-2xl font-bold border-2 border-purple-500">
             {author.name?.[0]?.toUpperCase() || "A"}
           </div>
-        )}
+        )} */}
         <div className="ml-4">
           <h2 className="text-lg font-semibold text-purple-600">
             {author.name}
           </h2>
-          <p className=" mt-2 text-xs text-gray-600">{author.description}</p>
+          <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+            {author.description}
+          </p>
 
-          <div className="mt-4 flex space-x-4">
+          <div className="mt-3 flex space-x-3">
             {socialLinks.map((link) => {
               const Icon =
                 link.platform === "Twitter"
                   ? FaTwitter
                   : link.platform === "LinkedIn"
-                  ? FaLinkedin
-                  : link.platform === "Instagram"
-                  ? FaInstagram
-                  : null;
+                    ? FaLinkedin
+                    : link.platform === "Instagram"
+                      ? FaInstagram
+                      : null;
               return Icon ? (
                 <a
                   key={link.platform}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-700 transition-colors"
+                  className="text-purple-600 hover:text-purple-800 transition-colors"
                 >
-                  <Icon size={20} />
+                  <Icon size={18} />
                 </a>
               ) : null;
             })}
@@ -95,7 +95,7 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
         </div>
       </div>
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-4 text-purple-600">
+        <h3 className="text-lg font-semibold mb-3 text-purple-600 border-b border-purple-200 pb-2">
           Staff Picks
         </h3>
         {staffPicksLoading ? (
@@ -106,7 +106,7 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
               <li key={post._id}>
                 <Link
                   to={`/post/${post.slug}`}
-                  className="text-gray-600  text-xs md:text-sm hover:underline hover:text-purple-600"
+                  className="text-gray-600 text-sm hover:text-purple-600 transition-colors line-clamp-2"
                 >
                   {post.title}
                 </Link>
@@ -118,7 +118,7 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
         )}
       </div>
       <div className="hidden sm:block">
-        <h3 className="text-lg font-semibold mb-4 text-purple-600">
+        <h3 className="text-lg font-semibold mb-3 text-purple-600 border-b border-purple-200 pb-2">
           Categories
         </h3>
         <ul className="space-y-2">
@@ -126,28 +126,28 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
             <li key={category}>
               <Link
                 to={`/category/${category}`}
-                className="text-blue-600 hover:underline"
+                className="text-purple-600 hover:text-purple-800 transition-colors block"
               >
                 {category == "technology" ? (
                   <img
-                    className="overflow-hidden rounded-lg"
+                    className="overflow-hidden rounded-lg w-full h-24 object-cover"
                     src={techCimg}
                     alt=""
                   />
                 ) : category == "inspiration" ? (
                   <img
-                    className="overflow-hidden rounded-lg"
+                    className="overflow-hidden rounded-lg w-full h-24 object-cover"
                     src={inspirationCimg}
                     alt=""
                   />
                 ) : category == "general" ? (
                   <img
-                    className="overflow-hidden rounded-lg"
+                    className="overflow-hidden rounded-lg w-full h-24 object-cover"
                     src={generalCimg}
                     alt=""
                   />
                 ) : (
-                  ""
+                  <span className="capitalize">{category}</span>
                 )}
               </Link>
             </li>

@@ -38,13 +38,11 @@ const DashUsers = () => {
             setShowMore(false);
           }
         }
-        if (!res.ok) {
-          setSpinner(false);
-          return;
-        }
+      if (!res.ok) {
+        setSpinner(false);
+      }
       } catch (err) {
         setSpinner(false);
-        console.log(err);
       }
     };
     getUser();
@@ -64,10 +62,10 @@ const DashUsers = () => {
         );
       }
       if (!res.ok) {
-        console.log(data);
+        // silent
       }
     } catch (error) {
-      console.log(error);
+      // silent
     }
   }
 
@@ -91,77 +89,84 @@ const DashUsers = () => {
         setShowMore(false);
       }
     } catch (error) {
-      console.log(error.message);
+      // silent
     }
   }
   return (
-    <div className="overflow-x-auto w-full ">
+    <div className="overflow-x-auto w-full">
       <div className="lg:mx-20 mt-1 mb-10">
-        <table className="min-w-full table-auto whitespace-nowrap  shadow-lg border rounded ">
-          <thead className="text-left font-semibold text-gray-500 text-md uppercase bg-gray-100">
-            <tr>
-              <th className=" px-4 py-2">CREATED</th>
-              <th className=" px-4 py-2">PROFILE</th>
-              <th className=" px-4 py-2">NAME</th>
-              <th className=" px-4 py-2">EMAIL</th>
-              <th className=" px-4 py-2">ADMIN</th>
-              <th className=" px-4 py-2">DELETE</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentUser.isAdmin && fetchedUsers.length > 0 ? (
-              fetchedUsers.map((user, i) => {
-                return (
-                  <tr key={i} className="text-xs border">
-                    <td className=" px-4 py-2">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className=" px-4 py-2">
-                      <div
-                        to="/dashboard?tab=profile"
-                        className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold hover:bg-purple-700"
-                      >
-                        {user.username[0].toUpperCase()}
-                      </div>
-                    </td>
-                    <td className=" px-4 py-2">{user.username}</td>
-                    <td className=" px-4 py-2">{user.email}</td>
-                    <td className=" px-4 py-2 ">
-                      {user.isAdmin ? (
-                        <TiTick className="text-xl text-green-500" />
-                      ) : (
-                        <ImCross className="text-md text-red-500" />
-                      )}
-                    </td>
-                    <td className=" px-4 py-2">
-                      <span
-                        onClick={() => {
-                          setDeleteBtnClick(user._id);
-                          setOnUserDelete(true);
-                        }}
-                        className="text-red-500 cursor-pointer hover:underline"
-                      >
-                        <MdDelete className="text-lg hover:text-xl" />
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : fetchedUsers && fetchedUsers.length <= 0 ? (
-              <div className="text-center p-3">No Users</div>
-            ) : (
-              <div className=" flex justify-center   my-5 ">
-                <Spinner className="w-10 h-10" />
-              </div>
-            )}
-          </tbody>
-        </table>
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+          <table className="min-w-full table-auto whitespace-nowrap">
+            <thead className="text-left font-semibold text-gray-500 text-sm uppercase bg-gray-50">
+              <tr>
+                <th className="px-4 py-3">Created</th>
+                <th className="px-4 py-3">Profile</th>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Admin</th>
+                <th className="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentUser.isAdmin && fetchedUsers.length > 0 ? (
+                fetchedUsers.map((user, i) => {
+                  return (
+                    <tr key={i} className="text-sm border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 text-gray-600">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold hover:bg-purple-700 transition-colors">
+                          {user.username[0].toUpperCase()}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-medium text-gray-900">{user.username}</td>
+                      <td className="px-4 py-3 text-gray-600">{user.email}</td>
+                      <td className="px-4 py-3">
+                        {user.isAdmin ? (
+                          <TiTick className="text-xl text-green-500" />
+                        ) : (
+                          <ImCross className="text-xl text-red-400" />
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          onClick={() => {
+                            setDeleteBtnClick(user._id);
+                            setOnUserDelete(true);
+                          }}
+                          className="text-red-500 cursor-pointer hover:text-red-700 transition-colors"
+                        >
+                          <MdDelete className="text-lg" />
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : fetchedUsers && fetchedUsers.length <= 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center p-8 text-gray-500">
+                    <div className="flex flex-col items-center justify-center">
+                      <p className="text-lg font-medium">No users found</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center p-8">
+                    <Spinner className="w-8 h-8 text-purple-600 mx-auto" />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center mt-6">
           {showMore && (
             <button
+              className="text-purple-600 font-medium hover:text-purple-800 transition-colors"
               onClick={handleShowMore}
-              className="underline text-teal-500 self-center "
             >
               Show More
             </button>

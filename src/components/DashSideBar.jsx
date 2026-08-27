@@ -60,72 +60,77 @@ const DashSideBar = () => {
     }
   }
   return (
-    <div className="bg-sky-900 sm:w-56 sm:h-auto sm:min-h-screen p-2 ">
+    <div className="bg-white sm:w-56 sm:h-auto sm:min-h-screen p-4 border-r border-gray-200 shadow-sm">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-purple-600 px-2">Dashboard</h2>
+      </div>
       {currentUser.isAdmin && (
         <Link
-          className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800"
+          className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
           to={"create-post"}
         >
-          <BsFileEarmarkPost className="mr-1" /> Create a post
+          <BsFileEarmarkPost className="mr-3" /> Create a post
         </Link>
       )}
       {currentUser.isAdmin && (
         <Link
-          className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800 "
+          className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
           to={"/dashboard?tab=dashboard-overview"}
         >
-          <MdDashboard className="mr-1" />
+          <MdDashboard className="mr-3" />
           Dashboard
         </Link>
       )}
       <Link
-        className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800 "
+        className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
         to={"/dashboard?tab=profile"}
       >
-        <CgProfile className="mr-1" />
-        Profile{" "}
-        <span className="bg-green-500 text-white text-xs   ml-2 px-1 font-semibold rounded">
+        <CgProfile className="mr-3" />
+        Profile
+        <span className={`ml-auto text-white text-xs px-2 py-0.5 rounded-full font-semibold ${currentUser.isAdmin ? "bg-purple-600" : "bg-gray-400"}`}>
           {currentUser.isAdmin ? "Admin" : "User"}
         </span>
       </Link>
       {currentUser.isAdmin && (
         <Link
-          className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800 "
+          className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
           to={"/dashboard?tab=posts"}
         >
-          <MdPostAdd className="mr-1" />
+          <MdPostAdd className="mr-3" />
           Posts
         </Link>
       )}
       {currentUser.isAdmin && (
         <Link
-          className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800 "
+          className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
           to={"/dashboard?tab=users"}
         >
-          <CiUser className="mr-1" />
+          <CiUser className="mr-3" />
           Users
         </Link>
-      )}{" "}
-      <button
-        onClick={() => {
-          setSignOutPopUp(true);
-          setDeleteAccPopUp(false);
-        }}
-        className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-sky-800"
-      >
-        <FaArrowRight className="mr-1 text-sm" />
-        Sign Out
-      </button>
-      <button
-        onClick={() => {
-          setDeleteAccPopUp(true);
-          setSignOutPopUp(false);
-        }}
-        className="flex items-center bg-sky-950 text-white w-full rounded-md p-2 my-2 hover:bg-red-500"
-      >
-        <MdDelete className="mr-1 text-sm" />
-        Delete Account
-      </button>
+      )}
+      <div className="mt-6 pt-4 border-t border-gray-200">
+        <button
+          onClick={() => {
+            setSignOutPopUp(true);
+            setDeleteAccPopUp(false);
+          }}
+          className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
+        >
+          <FaArrowRight className="mr-3 text-sm" />
+          Sign Out
+        </button>
+        <button
+          onClick={() => {
+            setDeleteAccPopUp(true);
+            setSignOutPopUp(false);
+          }}
+          className="flex items-center bg-red-50 text-red-600 w-full rounded-lg p-3 my-2 hover:bg-red-100 transition-colors font-medium"
+        >
+          <MdDelete className="mr-3 text-sm" />
+          Delete Account
+        </button>
+      </div>
       {signOutPopUp && (
         <ConfirmationDialog
           message="Are you sure you want to logout?"

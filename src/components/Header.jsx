@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useSelector } from "react-redux";
-import { FaSearch } from "react-icons/fa";
 import logo from "../assets/logo.png";
 
 import { RxCross2 } from "react-icons/rx";
@@ -45,9 +44,6 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-4 px-4">
-          <div className="flex items-center justify-center w-10 h-10 border border-purple-600 py-2 px-2 rounded-full cursor-pointer hover:border-purple-700">
-            <FaSearch className="text-2xl" />
-          </div>
           {!currentUser ? (
             <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 text-xs">
               <Link to="/signin">Sign In</Link>
