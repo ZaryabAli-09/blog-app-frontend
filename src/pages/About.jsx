@@ -22,17 +22,7 @@ const About = () => {
             MY MISSION
           </h3>
           <p className="">
-            I am Zaryab Ali, a final-year Software Engineering student at Iqra
-            National University, Peshawar, with roots in Katlang, a vibrant area
-            in the Mardan district of Khyber Pakhtunkhwa, Pakistan. As a
-            full-stack MERN developer, I excel in leading and managing web
-            development projects, offering tailored business solutions through
-            advanced technologies like React.js, Node.js, and MongoDB. My
-            expertise extends to integrating Framer Motion for creating visually
-            engaging animations that enhance user experiences on websites.
-            Alongside my technical skills, I am proficient in creative tools
-            like Canva and Adobe Illustrator, enabling me to bring a unique
-            blend of design and development to every project.
+            Zaryab Ali is a full stack developer with 2+ years of professional experience specializing in the MERN stack. He builds scalable web applications and shares insights on modern development practices.
           </p>
         </div>
         <div className="w-full p-5 md:w-[50%]">

@@ -13,7 +13,35 @@ const DashPosts = () => {
   const [postId, setPostId] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [onPostDelete, setOnPostDelete] = useState(false);
+  const [staffPickLoading, setStaffPickLoading] = useState({});
   const confirmationDialogRef = useRef(null);
+
+  const toggleStaffPick = async (postId) => {
+    try {
+      setStaffPickLoading((prev) => ({ ...prev, [postId]: true }));
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/posts/staff-pick/${postId}`,
+        {
+          method: "PUT",
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setFetchedPosts((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? { ...post, staffPick: !post.staffPick }
+              : post
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setStaffPickLoading((prev) => ({ ...prev, [postId]: false }));
+    }
+  };
 
   useEffect(() => {
     if (onPostDelete && confirmationDialogRef.current) {
@@ -104,6 +132,7 @@ const DashPosts = () => {
               <th className=" px-3 py-3">IMAGE</th>
               <th className=" px-3 py-3">POST TITLE</th>
               <th className=" px-3 py-3">CATEGORY</th>
+              <th className=" px-3 py-3">STAFF PICK</th>
               <th className=" px-3 py-3">DELETE</th>
               <th className=" px-3 py-3">EDIT</th>
             </tr>
@@ -135,6 +164,23 @@ const DashPosts = () => {
                       </span>
                     </td>
                     <td className=" px-3 py-3">{post.category}</td>
+                    <td className=" px-3 py-3">
+                       <button
+                         onClick={() => toggleStaffPick(post._id)}
+                         disabled={staffPickLoading[post._id]}
+                         className={`px-3 py-1 rounded text-xs font-semibold ${
+                           post.staffPick
+                             ? "bg-green-500 text-white"
+                             : "bg-gray-300 text-gray-700"
+                         }`}
+                       >
+                         {staffPickLoading[post._id]
+                           ? "..."
+                           : post.staffPick
+                           ? "Yes"
+                           : "No"}
+                       </button>
+                    </td>
                     <td className=" px-3 py-3 ">
                       <span
                         onClick={() => {

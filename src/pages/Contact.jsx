@@ -20,9 +20,7 @@ const Contact = () => {
             Send me a message for business inquiries
           </h3>
           <p className="">
-            I am Zaryab Ali, a final-year Software Engineering student at Iqra
-            National University, Peshawar, with roots in Katlang, a vibrant area
-            in the Mardan district of Khyber Pakhtunkhwa, Pakistan.
+            Zaryab Ali is a full stack developer with 2+ years of professional experience specializing in the MERN stack. He builds scalable web applications and shares insights on modern development practices.
             <br /> <br />
             katlang mardan kpk pakistan
             <br /> <br />

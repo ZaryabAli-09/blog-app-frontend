@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import app from "../firebase";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 const EditPost = () => {

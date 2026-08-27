@@ -43,7 +43,7 @@ const Home = () => {
     name: "Zaryab Ali",
     picture: "https://via.placeholder.com/150",
     description:
-      "Zaryab is a passionate full stack web developer and side hustle blogger.",
+      "Zaryab Ali is a full stack developer with 2+ years of professional experience specializing in the MERN stack. He builds scalable web applications and shares insights on modern development practices.",
   };
   const socialLinks = [
     {
@@ -138,14 +138,14 @@ const Home = () => {
                         <div className="flex items-center space-x-2">
                           <img
                             src={
-                              post.authorAvatar ||
-                              "https://via.placeholder.com/150"
+                              post.author?.profilePicture ||
+                              `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.username || 'A')}&background=random`
                             }
                             className="w-8 h-8 rounded-full object-cover"
-                            alt={post.author}
+                            alt={post.author?.username}
                           />
                           <span className="text-sm text-gray-600">
-                            {post.author}
+                            {post.author?.username}
                           </span>
                         </div>
                         <div className="space-x-3 text-sm text-gray-600">
@@ -172,7 +172,6 @@ const Home = () => {
           author={author}
           socialLinks={socialLinks}
           recentPosts={recentPosts}
-          categories={categories}
         />
       </div>
       <FooterCom />

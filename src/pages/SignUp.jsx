@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -114,7 +113,6 @@ const SignUp = () => {
           >
             {loading ? "Loading..." : "SIGN UP"}
           </button>
-          <OAuth />
         </div>
         <div className="flex space-x-1 mt-2">
           <span className="text-sm">Have an account?</span>
@@ -125,7 +123,7 @@ const SignUp = () => {
         {errorMessage ? (
           <div
             className={`p-2 ${
-              errorMessage === "Signup successfull"
+               errorMessage === "Signup successful"
                 ? "bg-green-400"
                 : "bg-red-400"
             } text-white rounded text-center bg-opacity-70`}

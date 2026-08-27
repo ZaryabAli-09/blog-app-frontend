@@ -8,6 +8,8 @@ import techCimg from "../assets/techCategoryImg.jpg";
 
 const Sidebar = ({ author, socialLinks, recentPosts }) => {
   const [categories, setCategories] = useState([]);
+  const [staffPicks, setStaffPicks] = useState([]);
+  const [staffPicksLoading, setStaffPicksLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -26,17 +28,41 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
       }
     };
 
+    const fetchStaffPicks = async () => {
+      try {
+        setStaffPicksLoading(true);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/posts/staff-picks`
+        );
+        const data = await res.json();
+        if (res.ok) {
+          setStaffPicks(data.posts || []);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setStaffPicksLoading(false);
+      }
+    };
+
     fetchCategories();
+    fetchStaffPicks();
   }, []);
 
   return (
     <aside className="w-[] sm:w-[200px] md:w-[260px] p-4 bg-gray-50 mt-4 ">
       <div className="flex items-center mb-6 sm:hidden md:block">
-        <img
-          src={author.picture}
-          alt={author.name}
-          className="md:ml-5 w-16 h-16 rounded-full object-cover"
-        />
+        {author.picture ? (
+          <img
+            src={author.picture}
+            alt={author.name}
+            className="md:ml-5 w-16 h-16 rounded-full object-cover"
+          />
+        ) : (
+          <div className="md:ml-5 w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+            {author.name?.[0]?.toUpperCase() || "A"}
+          </div>
+        )}
         <div className="ml-4">
           <h2 className="text-lg font-semibold text-purple-600">
             {author.name}
@@ -72,18 +98,24 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
         <h3 className="text-lg font-semibold mb-4 text-purple-600">
           Staff Picks
         </h3>
-        <ul className="space-y-2">
-          {recentPosts.map((post) => (
-            <li key={post._id}>
-              <Link
-                to={`/post/${post.slug}`}
-                className="text-gray-600  text-xs md:text-sm hover:underline hover:text-purple-600"
-              >
-                {post.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {staffPicksLoading ? (
+          <p className="text-sm text-gray-500">Loading...</p>
+        ) : staffPicks.length > 0 ? (
+          <ul className="space-y-2">
+            {staffPicks.map((post) => (
+              <li key={post._id}>
+                <Link
+                  to={`/post/${post.slug}`}
+                  className="text-gray-600  text-xs md:text-sm hover:underline hover:text-purple-600"
+                >
+                  {post.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500">No staff picks yet.</p>
+        )}
       </div>
       <div className="hidden sm:block">
         <h3 className="text-lg font-semibold mb-4 text-purple-600">

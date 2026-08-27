@@ -10,16 +10,31 @@ const DashProfile = () => {
   const [password, setPassword] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [profilePicFile, setProfilePicFile] = useState(null);
+  const [profilePicPreview, setProfilePicPreview] = useState(
+    currentUser.profilePicture || null
+  );
+  const [bio, setBio] = useState(currentUser.bio || "");
+
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicFile(file);
+      setProfilePicPreview(URL.createObjectURL(file));
+    }
+  };
 
   async function onUpdatedUserFormSubmit(e) {
     e.preventDefault();
 
-    const formData = {
-      username,
-      email,
-      password,
-    };
-    if (Object.keys(formData).length === 0) {
+    const formData = new FormData();
+    if (username) formData.append("username", username);
+    if (email) formData.append("email", email);
+    if (password) formData.append("password", password);
+    if (profilePicFile) formData.append("profilePic", profilePicFile);
+    formData.append("bio", bio || "");
+
+    if (formData.entries().next().done) {
       return;
     }
     try {
@@ -28,11 +43,7 @@ const DashProfile = () => {
         `${import.meta.env.VITE_API_URL}/api/user/update/${currentUser._id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify(formData),
+          body: formData,
           credentials: "include",
         }
       );
@@ -45,6 +56,7 @@ const DashProfile = () => {
         setLoading(false);
         dispatch(signInSuccessAction.updateUser(data.data));
         setErrorMessage(data.message);
+        setProfilePicFile(null);
         setTimeout(() => {
           setErrorMessage(null);
         }, 2000);
@@ -63,11 +75,25 @@ const DashProfile = () => {
           onSubmit={onUpdatedUserFormSubmit}
           className=" flex items-center flex-col space-y-2 w-80"
         >
-          <div className="w-20 rounded-full text-gray-400 bg-gray-200 overflow-hidden border h-20 flex items-center justify-center ">
-            <div className="text-5xl ">
-              {currentUser.username.split("")[0].toUpperCase()}
-            </div>
+          <div className="w-20 h-20 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200 text-gray-400">
+            {profilePicPreview ? (
+              <img
+                src={profilePicPreview}
+                alt="profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="text-5xl">
+                {currentUser.username?.split("")[0]?.toUpperCase()}
+              </div>
+            )}
           </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleProfilePicChange}
+            className="rounded w-full text-sm"
+          />
           <input
             className="rounded w-full"
             type="text"
@@ -79,6 +105,13 @@ const DashProfile = () => {
             type="email"
             defaultValue={currentUser.email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+          <textarea
+            className="rounded w-full"
+            placeholder="Bio"
+            defaultValue={currentUser.bio || ""}
+            onChange={(e) => setBio(e.target.value)}
+            rows={3}
           />
           <input
             className="rounded w-full"

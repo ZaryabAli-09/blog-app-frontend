@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInSuccessAction } from "../reduxStore/store.js";
 import { useDispatch } from "react-redux";
-import OAuth from "../components/OAuth.jsx";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -101,7 +100,6 @@ const SignIn = () => {
           >
             {loading ? "Loading..." : "Sign In"}
           </button>
-          <OAuth />
         </div>
         <div className="flex space-x-1 mt-2">
           <span className="text-sm">Don't have an account?</span>

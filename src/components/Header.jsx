@@ -54,12 +54,25 @@ const Header = () => {
             </button>
           ) : (
             <div>
-              <Link
-                to="/dashboard?tab=profile"
-                className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold hover:bg-purple-700"
-              >
-                {currentUser.username[0].toUpperCase()}
-              </Link>
+              {currentUser.profilePicture ? (
+                <Link
+                  to="/dashboard?tab=profile"
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white text-2xl font-bold hover:bg-purple-700 overflow-hidden"
+                >
+                  <img
+                    src={currentUser.profilePicture}
+                    alt="profile"
+                    className="w-full h-full object-cover"
+                  />
+                </Link>
+              ) : (
+                <Link
+                  to="/dashboard?tab=profile"
+                  className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold hover:bg-purple-700"
+                >
+                  {currentUser.username?.[0]?.toUpperCase() || "U"}
+                </Link>
+              )}
             </div>
           )}
 
