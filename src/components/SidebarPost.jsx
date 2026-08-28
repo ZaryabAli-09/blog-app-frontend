@@ -2,49 +2,46 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
-import generalCimg from "../assets/generalcategoryImg.jpg";
-import inspirationCimg from "../assets/inspirationCategoryImg.jpg";
-import techCimg from "../assets/techCategoryImg.jpg";
 
 const Sidebar = ({ author, socialLinks, recentPosts }) => {
   const [categories, setCategories] = useState([]);
-  const [staffPicks, setStaffPicks] = useState([]);
-  const [staffPicksLoading, setStaffPicksLoading] = useState(true);
+  const [featuredPosts, setFeaturedPosts] = useState([]);
+  const [featuredLoading, setFeaturedLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/posts/get-categories`,
+          `${import.meta.env.VITE_API_URL}/api/categories/get-categories`,
         );
         const data = await res.json();
         if (res.ok) {
-          setCategories(data.categories);
+          setCategories(data.categories || []);
         }
       } catch (err) {
         // silent
       }
     };
 
-    const fetchStaffPicks = async () => {
+    const fetchFeaturedPosts = async () => {
       try {
-        setStaffPicksLoading(true);
+        setFeaturedLoading(true);
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/posts/staff-picks`,
+          `${import.meta.env.VITE_API_URL}/api/posts/featured`,
         );
         const data = await res.json();
         if (res.ok) {
-          setStaffPicks(data.posts || []);
+          setFeaturedPosts(data.posts || []);
         }
       } catch (err) {
         // silent
       } finally {
-        setStaffPicksLoading(false);
+        setFeaturedLoading(false);
       }
     };
 
     fetchCategories();
-    fetchStaffPicks();
+    fetchFeaturedPosts();
   }, []);
 
   return (
@@ -96,13 +93,13 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
       </div>
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-3 text-purple-600 border-b border-purple-200 pb-2">
-          Staff Picks
+          Featured
         </h3>
-        {staffPicksLoading ? (
+        {featuredLoading ? (
           <p className="text-sm text-gray-500">Loading...</p>
-        ) : staffPicks.length > 0 ? (
+        ) : featuredPosts.length > 0 ? (
           <ul className="space-y-2">
-            {staffPicks.map((post) => (
+            {featuredPosts.map((post) => (
               <li key={post._id}>
                 <Link
                   to={`/post/${post.slug}`}
@@ -114,7 +111,7 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-gray-500">No staff picks yet.</p>
+          <p className="text-sm text-gray-500">No featured posts yet.</p>
         )}
       </div>
       <div className="hidden sm:block">
@@ -126,29 +123,9 @@ const Sidebar = ({ author, socialLinks, recentPosts }) => {
             <li key={category}>
               <Link
                 to={`/category/${category}`}
-                className="text-purple-600 hover:text-purple-800 transition-colors block"
+                className="text-purple-600 hover:text-purple-800 transition-colors block capitalize"
               >
-                {category == "technology" ? (
-                  <img
-                    className="overflow-hidden rounded-lg w-full h-24 object-cover"
-                    src={techCimg}
-                    alt=""
-                  />
-                ) : category == "inspiration" ? (
-                  <img
-                    className="overflow-hidden rounded-lg w-full h-24 object-cover"
-                    src={inspirationCimg}
-                    alt=""
-                  />
-                ) : category == "general" ? (
-                  <img
-                    className="overflow-hidden rounded-lg w-full h-24 object-cover"
-                    src={generalCimg}
-                    alt=""
-                  />
-                ) : (
-                  <span className="capitalize">{category}</span>
-                )}
+                {category}
               </Link>
             </li>
           ))}

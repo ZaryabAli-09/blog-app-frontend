@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
@@ -8,11 +8,32 @@ const CreatePost = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [file, setFile] = useState("");
   const [content, setContent] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/categories/get-categories`,
+        );
+        const data = await res.json();
+        if (res.ok) {
+          setCategories(data.categories || []);
+        }
+      } catch (err) {
+        // silent
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   async function publishPostHandler(e) {
     e.preventDefault();
@@ -73,18 +94,22 @@ const CreatePost = () => {
             className="rounded sm:w-full border border-gray-300 px-4 py-2 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-colors"
           />
           <select
+            value={category}
             required
             className="rounded border border-gray-300 px-4 py-2 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-colors"
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="uncategorized">Select category</option>
-            <option value="general">General</option>
-            <option value="inspiration">Inspiration</option>
-            <option value="technology">Technology</option>
-            <option value="reactjs">React JS</option>
-            <option value="mongodb">Mongo DB</option>
+            <option value="">Select category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
+        {categoriesLoading && (
+          <p className="text-sm text-gray-500">Loading categories...</p>
+        )}
         <div className="flex gap-4 items-center justify-between border border-purple-200 p-4 rounded-lg bg-purple-50">
           <input
             required

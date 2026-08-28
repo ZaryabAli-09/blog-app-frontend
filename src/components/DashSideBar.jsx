@@ -5,6 +5,7 @@ import { CiUser } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { MdPostAdd } from "react-icons/md";
 import { MdDashboard } from "react-icons/md";
+import { MdCategory } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { signInSuccessAction } from "../reduxStore/store";
 import { MdDelete } from "react-icons/md";
@@ -98,6 +99,15 @@ const DashSideBar = () => {
         >
           <MdPostAdd className="mr-3" />
           Posts
+        </Link>
+      )}
+      {currentUser.isAdmin && (
+        <Link
+          className="flex items-center bg-purple-50 text-purple-700 w-full rounded-lg p-3 my-2 hover:bg-purple-100 transition-colors font-medium"
+          to={"/dashboard?tab=categories"}
+        >
+          <MdCategory className="mr-3" />
+          Categories
         </Link>
       )}
       {currentUser.isAdmin && (

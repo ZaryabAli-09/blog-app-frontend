@@ -13,14 +13,14 @@ const DashPosts = () => {
   const [postId, setPostId] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [onPostDelete, setOnPostDelete] = useState(false);
-  const [staffPickLoading, setStaffPickLoading] = useState({});
+  const [featuredLoading, setFeaturedLoading] = useState({});
   const confirmationDialogRef = useRef(null);
 
-  const toggleStaffPick = async (postId) => {
+  const toggleFeatured = async (postId) => {
     try {
-      setStaffPickLoading((prev) => ({ ...prev, [postId]: true }));
+      setFeaturedLoading((prev) => ({ ...prev, [postId]: true }));
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/posts/staff-pick/${postId}`,
+        `${import.meta.env.VITE_API_URL}/api/posts/featured/${postId}`,
         {
           method: "PUT",
           credentials: "include",
@@ -31,7 +31,7 @@ const DashPosts = () => {
         setFetchedPosts((prev) =>
           prev.map((post) =>
             post._id === postId
-              ? { ...post, staffPick: !post.staffPick }
+              ? { ...post, featured: !post.featured }
               : post
           )
         );
@@ -39,7 +39,7 @@ const DashPosts = () => {
     } catch (error) {
       // silent
     } finally {
-      setStaffPickLoading((prev) => ({ ...prev, [postId]: false }));
+      setFeaturedLoading((prev) => ({ ...prev, [postId]: false }));
     }
   };
 
@@ -130,7 +130,7 @@ const DashPosts = () => {
                 <th className="px-4 py-3">Image</th>
                 <th className="px-4 py-3">Post Title</th>
                 <th className="px-4 py-3">Category</th>
-                <th className="px-4 py-3">Staff Pick</th>
+                <th className="px-4 py-3">Featured</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -164,17 +164,17 @@ const DashPosts = () => {
                       </td>
                       <td className="px-4 py-3">
                         <button
-                          onClick={() => toggleStaffPick(post._id)}
-                          disabled={staffPickLoading[post._id]}
+                          onClick={() => toggleFeatured(post._id)}
+                          disabled={featuredLoading[post._id]}
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                            post.staffPick
+                            post.featured
                               ? "bg-green-100 text-green-700 border border-green-200"
                               : "bg-gray-100 text-gray-600 border border-gray-200"
                           }`}
                         >
-                          {staffPickLoading[post._id]
+                          {featuredLoading[post._id]
                             ? "..."
-                            : post.staffPick
+                            : post.featured
                             ? "Yes"
                             : "No"}
                         </button>
