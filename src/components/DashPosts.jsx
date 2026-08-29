@@ -22,7 +22,7 @@ const DashPosts = () => {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/posts/featured/${postId}`,
         {
-          method: "PUT",
+          method: "PATCH",
           credentials: "include",
         }
       );
